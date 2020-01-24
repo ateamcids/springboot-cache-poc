@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/dashboard")
+@RequestMapping("/api/v1/micro-servicio2/")
 public class DashboardController {
     private final IDashboardService dashboardService;
     final ITestService testService;
