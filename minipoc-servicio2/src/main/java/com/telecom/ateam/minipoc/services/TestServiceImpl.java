@@ -23,13 +23,8 @@ public class TestServiceImpl implements ITestService {
         this.storeService = storeService;
     }
 
-    public List<DashboardModel> request() {
-/*        List result = (List) storeService.find("dashboard","lista",List.class);
+    public List<DashboardModel> request() throws JsonProcessingException, InterruptedException {
 
-        if(result != null && !result.isEmpty()){
-            List<DashboardModel> lista = (List<DashboardModel>) result;
-            return lista;
-        }*/
 
 
         RestTemplate restTemplate = new RestTemplate();
@@ -39,12 +34,19 @@ public class TestServiceImpl implements ITestService {
                 = restTemplate.getForEntity(fooResourceUrl, List.class);
         HttpHeaders headers = response.getHeaders();
 
+        List result = (List) storeService.find("dashboard","lista",List.class);
+
+        if(result != null && !result.isEmpty()){
+            List<DashboardModel> lista = (List<DashboardModel>) result;
+            return lista;
+        }
+
 
         List<DashboardModel> lista = (List<DashboardModel>) response.getBody();
         if(lista != null && !lista.isEmpty()){
             //storeService.addCollection("dashboard1", "lista", lista);
            // storeService.addCollection("dashboard", "lista", lista,15, TimeUnit.SECONDS);
-            storeService.add(lista,fooResourceUrl,headers);
+            storeService.addReactive(lista,fooResourceUrl,headers).subscribe(x-> System.out.println(x.toString()));
         }
 
         return lista;

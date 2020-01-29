@@ -76,12 +76,11 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     }
 
     @Override
-    public boolean addReactive(String collection, String hkey, T object) throws JsonProcessingException, InterruptedException {
+    public  Mono<Boolean> addReactive(String collection, String hkey, T object) throws JsonProcessingException, InterruptedException {
 
         try {
             String jsonObject = OBJECT_MAPPER.writeValueAsString(object);
-           Mono<Boolean> mono = reactiveTemplate.opsForHash().put(collection, hkey, jsonObject);
-            return true;
+            return reactiveTemplate.opsForHash().put(collection, hkey, jsonObject);
         } catch (Exception e) {
             throw e;
            // return false;
