@@ -1,11 +1,14 @@
-package com.example.minipocservicio1.services;
+package com.example.minipocservicio1.services.impl;
 
 import com.example.minipocservicio1.cachelibrary.repositories.interfaces.ICacheRepositoryOther;
 import com.example.minipocservicio1.cachelibrary.services.interfaces.ICacheStoreService;
 import com.example.minipocservicio1.models.DashboardModel;
 
-import com.example.minipocservicio1.repository.IDashboardService;
+import com.example.minipocservicio1.services.interfaces.IDashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -14,7 +17,14 @@ import java.util.List;
 
 
 @Service
+@EnableConfigurationProperties()
 public class DashboardServiceImpl implements IDashboardService {
+    @Value("${customcache.collection}")
+    private String collection;
+
+    @Value("${customcache.hkey}")
+    private String hkey;
+
     ICacheStoreService storeService;
     List<DashboardModel> listDashboard;
     @Autowired
@@ -28,6 +38,8 @@ public class DashboardServiceImpl implements IDashboardService {
     @Override
     public List<DashboardModel> request() {
 
+        System.out.println(collection);
+        System.out.println(hkey);
         listDashboard = (List<DashboardModel>) storeService.find("dashboard2", "lista", List.class);
         if (listDashboard != null && !listDashboard.isEmpty()) {
             return listDashboard;

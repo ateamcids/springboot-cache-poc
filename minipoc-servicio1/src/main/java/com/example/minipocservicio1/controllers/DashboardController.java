@@ -2,7 +2,7 @@ package com.example.minipocservicio1.controllers;
 
 import com.example.minipocservicio1.models.DashboardModel;
 
-import com.example.minipocservicio1.repository.IDashboardService;
+import com.example.minipocservicio1.services.interfaces.IDashboardService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

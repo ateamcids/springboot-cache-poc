@@ -52,7 +52,6 @@ public class RedisConfig{
                 .build();
     }
 
-
     @Bean
     @Primary
     public RedisConnectionFactory connectionFactory(RedisStandaloneConfiguration redisStandaloneConfiguration,

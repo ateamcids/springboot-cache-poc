@@ -46,7 +46,6 @@ public class CacheRepository<T> implements ICacheRepository<T> {
         try {
             addCollection(collection,hkey,object);
             template.expire(collection,timeout , unit);
-            template.opsForHash();
             return true;
         } catch (Exception e) {
             return false;
@@ -76,15 +75,34 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     }
 
     @Override
-    public boolean addReactive(String collection, String hkey, T object) throws JsonProcessingException, InterruptedException {
+    public  Mono<Boolean> addReactive(String collection, String hkey, T object) throws JsonProcessingException, InterruptedException {
 
         try {
             String jsonObject = OBJECT_MAPPER.writeValueAsString(object);
-           Mono<Boolean> mono = reactiveTemplate.opsForHash().put(collection, hkey, jsonObject);
-            return true;
+            return reactiveTemplate.opsForHash().put(collection, hkey, jsonObject);
         } catch (Exception e) {
             throw e;
            // return false;
+        }
+    }
+
+    public Mono<T> findReactive(String collection, String hkey, Class<T> tClass)  {
+
+        try {
+         return reactiveTemplate.opsForHash().get(collection, hkey).flatMap(x-> {
+
+             try {
+                 String json = String.valueOf(x);
+                 return Mono.just(OBJECT_MAPPER.readValue(json,tClass));
+             } catch (JsonProcessingException e) {
+                 e.printStackTrace();
+             }
+
+             return x;
+         });
+        } catch (Exception e) {
+            throw e;
+            // return false;
         }
     }
 
