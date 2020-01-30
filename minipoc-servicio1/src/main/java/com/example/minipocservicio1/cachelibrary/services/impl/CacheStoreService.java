@@ -1,0 +1,52 @@
+package com.example.minipocservicio1.cachelibrary.services.impl;
+
+import com.example.minipocservicio1.cachelibrary.repositories.interfaces.ICacheRepository;
+import com.example.minipocservicio1.cachelibrary.services.interfaces.ICacheStoreService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
+@Service
+public class CacheStoreService<T> implements ICacheStoreService<T> {
+    final ICacheRepository<T> cacheRepository;
+
+    public CacheStoreService(ICacheRepository<T> cacheRepository) {
+        this.cacheRepository = cacheRepository;
+    }
+
+    public boolean addCollection(String collection, String hkey, T object){
+        return cacheRepository.add(collection,hkey,object);
+    }
+
+    public boolean addCollection(String collection, String hkey, T object, int timeout, TimeUnit unit){
+        return cacheRepository.add(collection,hkey,object,timeout,unit);
+    }
+    public boolean addCollection(String collection, String hkey, T object, Date date){
+        return cacheRepository.add(collection,hkey,object,date);
+    }
+
+    public boolean add( T object, String requestUrl , HttpHeaders headers){
+        String cacheControl = headers.getCacheControl();
+ /*       switch (cacheControl){
+            case CacheControlEnum
+                    .PRIVATE
+        }*/
+        String hkey = headers.getETag();
+
+        if (hkey == null) hkey = requestUrl;
+
+        if(cacheRepository.any(requestUrl)){
+            if (cacheRepository.hasKey(requestUrl,hkey)){
+                return false;
+            }
+        }
+        return cacheRepository.add(requestUrl, hkey, object);
+    }
+
+    public T find(String collection, String hkey, Class<T> tClass){
+       return cacheRepository.find(collection, hkey, tClass);
+    }
+
+}
