@@ -14,6 +14,8 @@ public interface ICacheRepository<T>{
 
     boolean delete(String collection, String hkey);
     T find(String collection, String hkey, Class<T> tClass);
+    Mono<T> findReactive(String collection, String hkey, Class<T> tClass);
+
     Boolean isAvailable();
     boolean any(String collection);
     boolean hasKey(String collection, String hkey);
