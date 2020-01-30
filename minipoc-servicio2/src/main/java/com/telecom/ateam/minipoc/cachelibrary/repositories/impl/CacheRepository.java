@@ -2,7 +2,9 @@ package com.telecom.ateam.minipoc.cachelibrary.repositories.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.telecom.ateam.minipoc.cachelibrary.model.CacheModel;
 import com.telecom.ateam.minipoc.cachelibrary.repositories.interfaces.ICacheRepository;
+import com.telecom.ateam.minipoc.cachelibrary.util.strategy.CacheControlModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -44,8 +46,8 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     @Override
     public boolean add(String collection, String hkey, T object, int timeout, TimeUnit unit) {
         try {
-            addCollection(collection,hkey,object);
-            template.expire(collection,timeout , unit);
+            addCollection(collection, hkey, object);
+            template.expire(collection, timeout, unit);
             return true;
         } catch (Exception e) {
             return false;
@@ -56,7 +58,7 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     public boolean add(String collection, String hkey, T object) {
 
         try {
-            addCollection(collection,hkey,object);
+            addCollection(collection, hkey, object);
             return true;
         } catch (Exception e) {
             return false;
@@ -66,8 +68,8 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     @Override
     public boolean add(String collection, String hkey, T object, Date date) {
         try {
-            addCollection(collection,hkey,object);
-            template.expireAt(collection,date);
+            addCollection(collection, hkey, object);
+            template.expireAt(collection, date);
             return true;
         } catch (Exception e) {
             return false;
@@ -75,31 +77,33 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     }
 
     @Override
-    public  Mono<Boolean> addReactive(String collection, String hkey, T object) throws JsonProcessingException, InterruptedException {
+    public Mono<Boolean> addReactive(String collection, String hkey, T object) throws JsonProcessingException, InterruptedException {
 
         try {
             String jsonObject = OBJECT_MAPPER.writeValueAsString(object);
             return reactiveTemplate.opsForHash().put(collection, hkey, jsonObject);
         } catch (Exception e) {
             throw e;
-           // return false;
+            // return false;
         }
     }
 
-    public Mono<T> findReactive(String collection, String hkey, Class<T> tClass)  {
+
+
+    public Mono<T> findReactive(String collection, String hkey, Class<T> tClass) {
 
         try {
-         return reactiveTemplate.opsForHash().get(collection, hkey).flatMap(x-> {
+            return reactiveTemplate.opsForHash().get(collection, hkey).flatMap(x -> {
 
-             try {
-                 String json = String.valueOf(x);
-                 return Mono.just(OBJECT_MAPPER.readValue(json,tClass));
-             } catch (JsonProcessingException e) {
-                 e.printStackTrace();
-             }
+                try {
+                    String json = String.valueOf(x);
+                    return Mono.just(OBJECT_MAPPER.readValue(json, tClass));
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
 
-             return x;
-         });
+                return x;
+            });
         } catch (Exception e) {
             throw e;
             // return false;
@@ -111,7 +115,7 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     public boolean delete(String collection, String hkey) {
         try {
             template.opsForHash().delete(collection, hkey);
-            reactiveTemplate.delete(collection,hkey);
+            reactiveTemplate.delete(collection, hkey);
             return true;
         } catch (Exception e) {
             return false;
@@ -124,7 +128,7 @@ public class CacheRepository<T> implements ICacheRepository<T> {
             String jsonObj = String.valueOf(template.opsForHash().get(collection, hkey));
             return OBJECT_MAPPER.readValue(jsonObj, tClass);
         } catch (Exception e) {
-            if(e.getMessage() == null){
+            if (e.getMessage() == null) {
             } else {
             }
             return null;
@@ -133,7 +137,7 @@ public class CacheRepository<T> implements ICacheRepository<T> {
 
     @Override
     public Boolean isAvailable() {
-        try{
+        try {
             return template.getConnectionFactory().getConnection().ping() != null;
         } catch (Exception e) {
             return false;
@@ -141,16 +145,16 @@ public class CacheRepository<T> implements ICacheRepository<T> {
 
     }
 
-    public boolean any(String collection){
-        try{
+    public boolean any(String collection) {
+        try {
             return !template.opsForHash().entries(collection).isEmpty();
         } catch (Exception e) {
             return false;
         }
     }
 
-    public boolean hasKey(String collection, String hkey){
-        try{
+    public boolean hasKey(String collection, String hkey) {
+        try {
             return template.opsForHash().entries(collection).containsKey(hkey);
         } catch (Exception e) {
             return false;

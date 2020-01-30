@@ -1,4 +1,4 @@
-package com.telecom.ateam.minipoc.cachelibrary.util;
+package com.telecom.ateam.minipoc.cachelibrary.util.strategy;
 
 public enum CacheControlEnum {
     MUSTREVALIDATE,
