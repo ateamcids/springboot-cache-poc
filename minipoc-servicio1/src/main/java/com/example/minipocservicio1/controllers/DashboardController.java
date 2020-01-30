@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/micro-servicio1/dashboard")
+@RequestMapping("/api/v1/microServicio1/dashboard")
 public class DashboardController {
     private final IDashboardService dashboardService;
 
@@ -20,8 +20,7 @@ public class DashboardController {
     }
 
     @GetMapping
-    public List<DashboardModel> listar(){
-        System.out.println("Controller");
+    public List<DashboardModel> listar() {
         return dashboardService.request();
     }
 }

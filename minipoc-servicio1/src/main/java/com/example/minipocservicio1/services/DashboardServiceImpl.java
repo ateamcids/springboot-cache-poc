@@ -28,7 +28,6 @@ public class DashboardServiceImpl implements IDashboardService {
     @Override
     public List<DashboardModel> request() {
 
-        System.out.println("Servicio");
         listDashboard = (List<DashboardModel>) storeService.find("dashboard2", "lista", List.class);
         if (listDashboard != null && !listDashboard.isEmpty()) {
             return listDashboard;
