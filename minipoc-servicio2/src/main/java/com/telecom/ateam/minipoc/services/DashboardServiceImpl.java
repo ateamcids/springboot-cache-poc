@@ -92,11 +92,11 @@ public class DashboardServiceImpl implements IDashboardService {
         return lista;
     }
 
-    public List<DashboardModel> requestStandard() {
+    public List<DashboardModel> requestStandard(String collection, String hkey) {
 
         ResponseEntity<List> response = makeRequest();
 
-        List result = (List) storeService.find("dashboard", "lista", List.class);
+        List result = (List) storeService.find(collection, hkey, List.class);
 
         if (result != null && !result.isEmpty()) {
             List<DashboardModel> lista = (List<DashboardModel>) result;
@@ -104,7 +104,7 @@ public class DashboardServiceImpl implements IDashboardService {
         }
         List<DashboardModel> lista = (List<DashboardModel>) response.getBody();
         if (lista != null && !lista.isEmpty()) {
-            storeService.addCollection("dashboard", "lista", lista);
+            storeService.addCollection(collection, hkey, lista);
         }
         return lista;
     }
