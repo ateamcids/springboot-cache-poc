@@ -5,11 +5,11 @@ import org.springframework.cache.annotation.EnableCaching;
 
 @SpringBootApplication
 @EnableCaching
-public class MinipocApplication {
+public class MinipocServicio2Application {
 
 	public static void main(String[] args) {
 
-		SpringApplication.run(MinipocApplication.class, args);
+		SpringApplication.run(MinipocServicio2Application.class, args);
 	}
 
 }
