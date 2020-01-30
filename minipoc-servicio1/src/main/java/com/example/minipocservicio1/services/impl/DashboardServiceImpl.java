@@ -40,13 +40,13 @@ public class DashboardServiceImpl implements IDashboardService {
 
         System.out.println(collection);
         System.out.println(hkey);
-        listDashboard = (List<DashboardModel>) storeService.find("dashboard2", "lista", List.class);
+        listDashboard = (List<DashboardModel>) storeService.find(collection, hkey, List.class);
         if (listDashboard != null && !listDashboard.isEmpty()) {
             return listDashboard;
         } else {
             RestTemplate restTemplate = new RestTemplate();
             String fooResourceUrl
-                    = "http://localhost:8080/api/v1/micro-servicio2/listar-cache-repository";
+                    = "http://localhost:8080/api/v1/microServicio2/dashboard/standard?collection=" + collection + "&hkey=" + hkey;
             ResponseEntity<List> response
                     = restTemplate.getForEntity(fooResourceUrl, List.class);
             listDashboard = (List<DashboardModel>) response.getBody();
