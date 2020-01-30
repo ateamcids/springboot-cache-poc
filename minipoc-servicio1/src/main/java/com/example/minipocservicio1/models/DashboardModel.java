@@ -1,12 +1,19 @@
 package com.example.minipocservicio1.models;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
+
 import java.io.Serializable;
 
+@RedisHash("dashboard")
 public class DashboardModel implements Serializable {
+    @Id
     private String OB_NOMBRE;
     private int CANT_APP;
     private int OB_ID;
     private int OB_ID_VAL;
+    public DashboardModel() {
+    }
 
     public DashboardModel(String OB_NOMBRE, int CANT_APP, int OB_ID, int OB_ID_VAL) {
         this.OB_NOMBRE = OB_NOMBRE;
