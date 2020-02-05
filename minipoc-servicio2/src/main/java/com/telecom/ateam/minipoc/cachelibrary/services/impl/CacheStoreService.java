@@ -2,15 +2,19 @@ package com.telecom.ateam.minipoc.cachelibrary.services.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.telecom.ateam.minipoc.cachelibrary.model.CacheModel;
+import com.telecom.ateam.minipoc.cachelibrary.model.CacheResponseStatus;
 import com.telecom.ateam.minipoc.cachelibrary.repositories.interfaces.ICacheRepository;
 import com.telecom.ateam.minipoc.cachelibrary.services.interfaces.ICacheStoreService;
 import com.telecom.ateam.minipoc.cachelibrary.util.strategy.CacheControlEnum;
+import com.telecom.ateam.minipoc.cachelibrary.util.strategy.CacheControlStrategyResponse;
 import com.telecom.ateam.minipoc.cachelibrary.util.strategy.IStrategy;
 import com.telecom.ateam.minipoc.cachelibrary.util.strategy.StrategyFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -24,78 +28,62 @@ public class CacheStoreService<T> implements ICacheStoreService<T> {
         this.strategyFactory = strategyFactory;
     }
 
-    public boolean addCollection(String collection, String hkey, T object){
-        return cacheRepository.add(collection,hkey,object);
+    public boolean addCollection(String collection, String hkey, T object) {
+        return cacheRepository.add(collection, hkey, object);
     }
 
-    public boolean addCollection(String collection, String hkey, T object, int timeout, TimeUnit unit){
-        return cacheRepository.add(collection,hkey,object,timeout,unit);
-    }
-    public boolean addCollection(String collection, String hkey, T object, Date date){
-        return cacheRepository.add(collection,hkey,object,date);
+    public boolean addCollection(String collection, String hkey, T object, int timeout, TimeUnit unit) {
+        return cacheRepository.add(collection, hkey, object, timeout, unit);
     }
 
-    public boolean add( T object, String requestUrl , HttpHeaders headers){
+    public boolean addCollection(String collection, String hkey, T object, Date date) {
+        return cacheRepository.add(collection, hkey, object, date);
+    }
+
+    public CacheResponseStatus add(T object, String requestUrl, HttpHeaders headers) {
         String hkey = headers.getETag();
-
-        if(cacheRepository.any(requestUrl)){
-            if (cacheRepository.hasKey(requestUrl,hkey)){
-                return false;
-            }
-        }
         if (hkey == null) hkey = requestUrl;
 
-        String cacheControl = headers.getCacheControl();
+        /**
+         * ETag desarrollado abajo
+         */
+        if (cacheRepository.any(requestUrl)) {
+            if (cacheRepository.hasKey(requestUrl, hkey)) {
+                return new CacheResponseStatus("No se ha modificado", HttpStatus.NOT_MODIFIED,true);
+            }
+        }
+
+        //Todo flushear coleccion de esa requestUrl
+
+        String[] cacheControls = Arrays.stream(headers.getCacheControl().split(",")).map(String::trim).toArray(String[]::new);
         IStrategy strategy = null;
-        if (cacheControl.contains("max-age")){
-            strategy = strategyFactory.getStrategy(CacheControlEnum.MAXAGE);
+
+        //TODO foreach cada cachecontrol
+
+        strategy = strategyFactory.getStrategy(CacheControlEnum.getByCode(cacheControls[0]));
+
+        if (strategy != null) {
+            CacheControlStrategyResponse res = strategy.cacheControlStrategy(new CacheModel<T>(object, headers, requestUrl, hkey), cacheRepository);
+            return new CacheResponseStatus("Se aplicó estrategia",res.getStatus(),res.isCaching() );
         }
-        if (cacheControl.contains("no-store")){
-            strategy = strategyFactory.getStrategy(CacheControlEnum.NOSTORE);
-        }
-        /*if (cacheControl.contains("private")){
-            strategy = strategyFactory.getStrategy(CacheControlEnum.NOSTORE);
-        }*/
-
-        if (strategy!=null){
-            return strategy.cacheControlStrategy(new CacheModel<T>(object,headers,requestUrl,hkey),cacheRepository).isCaching();
-        }
-        return cacheRepository.add(requestUrl, hkey, object);
-
-
-
-
-
-
-
-
-
+        boolean add = cacheRepository.add(requestUrl, hkey, object);
+        return new CacheResponseStatus("Se aplicó estrategia",HttpStatus.OK,add );
 
     }
 
-    public Mono<Boolean> addReactive(T object, String requestUrl , HttpHeaders headers) throws JsonProcessingException, InterruptedException {
-        String cacheControl = headers.getCacheControl();
- /*       switch (cacheControl){
-            case CacheControlEnum
-                    .PRIVATE
-        }*/
+    public Mono<Boolean> addReactive(T object, String requestUrl, HttpHeaders headers) throws JsonProcessingException, InterruptedException {
+
+        String[] cacheControls = Arrays.stream(headers.getCacheControl().split(",")).map(String::trim).toArray(String[]::new);
         String hkey = headers.getETag();
-
         if (hkey == null) hkey = requestUrl;
-
-        /*if(cacheRepository.any(requestUrl)){
-            if (cacheRepository.hasKey(requestUrl,hkey)){
-                return false;
-            }
-        }*/
         return cacheRepository.addReactive(requestUrl, hkey, object);
     }
 
-    public T find(String collection, String hkey, Class<T> tClass){
-       return cacheRepository.find(collection, hkey, tClass);
+    public T find(String collection, String hkey, Class<T> tClass) {
+        return cacheRepository.find(collection, hkey, tClass);
     }
 
-    public Mono<T> findReactive(String collection, String hkey, Class<T> tClass){
+    public Mono<T> findReactive(String collection, String hkey, Class<T> tClass) {
         return cacheRepository.findReactive(collection, hkey, tClass);
     }
 }

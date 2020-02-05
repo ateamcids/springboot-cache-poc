@@ -4,7 +4,6 @@ import io.lettuce.core.ClientOptions;
 import io.lettuce.core.resource.ClientResources;
 import io.lettuce.core.resource.DefaultClientResources;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -17,10 +16,7 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
-
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -85,7 +81,7 @@ public class RedisConfig{
     @Primary
     public ReactiveRedisTemplate<Object, Object> reactiveRedisTemplate(
             @Qualifier("reactiveConnectionFactory") ReactiveRedisConnectionFactory redisConnectionFactory) {
-        ReactiveRedisTemplate<Object, Object> template = new ReactiveRedisTemplate(redisConnectionFactory,RedisSerializationContext.string());
+        ReactiveRedisTemplate<Object, Object> template = new ReactiveRedisTemplate(redisConnectionFactory, RedisSerializationContext.string());
         return template;
     }
     @Bean

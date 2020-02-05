@@ -2,9 +2,7 @@ package com.telecom.ateam.minipoc.cachelibrary.repositories.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.telecom.ateam.minipoc.cachelibrary.model.CacheModel;
 import com.telecom.ateam.minipoc.cachelibrary.repositories.interfaces.ICacheRepository;
-import com.telecom.ateam.minipoc.cachelibrary.util.strategy.CacheControlModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -12,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -77,7 +76,7 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     }
 
     @Override
-    public Mono<Boolean> addReactive(String collection, String hkey, T object) throws JsonProcessingException, InterruptedException {
+    public Mono<Boolean> addReactive(String collection, String hkey, T object) throws JsonProcessingException {
 
         try {
             String jsonObject = OBJECT_MAPPER.writeValueAsString(object);
@@ -158,6 +157,14 @@ public class CacheRepository<T> implements ICacheRepository<T> {
             return template.opsForHash().entries(collection).containsKey(hkey);
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    public Map completeCollection(String collection) {
+        try {
+            return template.opsForHash().entries(collection);
+        } catch (Exception e) {
+            return null;
         }
     }
 
