@@ -5,6 +5,7 @@ import com.telecom.ateam.minipoc.cachelibrary.model.CacheModel;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public interface ICacheRepository<T>{
@@ -21,5 +22,6 @@ public interface ICacheRepository<T>{
     Boolean isAvailable();
     boolean any(String collection);
     boolean hasKey(String collection, String hkey);
+    Map completeCollection(String collection);
 
 }

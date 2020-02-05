@@ -1,8 +1,11 @@
 package com.telecom.ateam.minipoc.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.telecom.ateam.minipoc.models.TaskModel;
 import com.telecom.ateam.minipoc.services.IDashboardService;
 import com.telecom.ateam.minipoc.models.DashboardModel;
+import com.telecom.ateam.minipoc.services.ITaskService;
+import javafx.concurrent.Task;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -12,14 +15,15 @@ import java.util.List;
 @RequestMapping("/api/v1/microServicio2/dashboard")
 public class DashboardController {
     final IDashboardService dashboardService;
-
-    public DashboardController( IDashboardService dashboardService) {
+    final ITaskService taskService;
+    public DashboardController(IDashboardService dashboardService, ITaskService taskService) {
         this.dashboardService = dashboardService;
+        this.taskService = taskService;
     }
 
     @GetMapping
-    public List<DashboardModel> listar() throws JsonProcessingException, InterruptedException {
-        return dashboardService.request();
+    public List<TaskModel> listar() throws JsonProcessingException, InterruptedException {
+        return taskService.request();
     }
 
     @GetMapping("/reactive")
@@ -27,8 +31,8 @@ public class DashboardController {
         return dashboardService.requestReactive();
     }
     @GetMapping("/reactivePut")
-    public Mono<List<DashboardModel>> listarReactivePut() {
-        return dashboardService.requestReactivePut();
+    public Mono<List<TaskModel>> listarReactivePut() {
+        return taskService.requestReactivePut();
     }
 
     @GetMapping("/expires/{expires}")

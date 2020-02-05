@@ -20,8 +20,8 @@ import org.springframework.data.redis.connection.lettuce.LettucePoolingClientCon
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @EnableConfigurationProperties(RedisProperties.class)
@@ -84,7 +84,7 @@ public class RedisConfig{
     @Primary
     public ReactiveRedisTemplate<Object, Object> reactiveRedisTemplate(
             @Qualifier("reactiveConnectionFactory") ReactiveRedisConnectionFactory redisConnectionFactory) {
-        ReactiveRedisTemplate<Object, Object> template = new ReactiveRedisTemplate(redisConnectionFactory,RedisSerializationContext.string());
+        ReactiveRedisTemplate<Object, Object> template = new ReactiveRedisTemplate(redisConnectionFactory, RedisSerializationContext.string());
         return template;
     }
     @Bean
@@ -93,6 +93,7 @@ public class RedisConfig{
     public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<Object, Object> template = new RedisTemplate();
         template.setConnectionFactory(redisConnectionFactory);
+        template.setDefaultSerializer(new StringRedisSerializer());
         return template;
     }
 }

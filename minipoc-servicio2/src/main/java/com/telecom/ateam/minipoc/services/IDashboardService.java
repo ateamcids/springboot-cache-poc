@@ -10,7 +10,6 @@ public interface IDashboardService {
     List<DashboardModel> request() throws JsonProcessingException, InterruptedException;
     Mono< List<DashboardModel>> requestReactive();
     Mono< List<DashboardModel>> requestReactivePut();
-
     List<DashboardModel> requestExpires(int expires) throws JsonProcessingException, InterruptedException;
     List<DashboardModel> requestStandard(String collection, String hkey);
 
