@@ -54,21 +54,24 @@ public class CacheStoreService<T> implements ICacheStoreService<T> {
         }
 
         //Todo flushear coleccion de esa requestUrl
+        //cacheRepository.delete(requestUrl,hkey);
+
 
         String[] cacheControls = Arrays.stream(headers.getCacheControl().split(",")).map(String::trim).toArray(String[]::new);
         IStrategy strategy = null;
 
         //TODO foreach cada cachecontrol
+        for (String cacheName : cacheControls) {
+            strategy = strategyFactory.getStrategy(CacheControlEnum.getByCode(cacheName));
 
-        strategy = strategyFactory.getStrategy(CacheControlEnum.getByCode(cacheControls[0]));
+            if (strategy != null) {
+                CacheControlStrategyResponse res = strategy.cacheControlStrategy(new CacheModel<T>(object, headers, requestUrl, hkey), cacheRepository);
+                return new CacheResponseStatus("Se aplicó estrategia",res.getStatus(),res.isCaching() );
+            }
 
-        if (strategy != null) {
-            CacheControlStrategyResponse res = strategy.cacheControlStrategy(new CacheModel<T>(object, headers, requestUrl, hkey), cacheRepository);
-            return new CacheResponseStatus("Se aplicó estrategia",res.getStatus(),res.isCaching() );
         }
         boolean add = cacheRepository.add(requestUrl, hkey, object);
         return new CacheResponseStatus("Se aplicó estrategia",HttpStatus.OK,add );
-
     }
 
     public Mono<Boolean> addReactive(T object, String requestUrl, HttpHeaders headers) throws JsonProcessingException, InterruptedException {
