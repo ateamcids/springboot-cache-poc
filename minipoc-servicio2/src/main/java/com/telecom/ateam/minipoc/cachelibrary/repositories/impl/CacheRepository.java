@@ -88,7 +88,6 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     }
 
 
-
     public Mono<T> findReactive(String collection, String hkey, Class<T> tClass) {
 
         try {
@@ -109,6 +108,16 @@ public class CacheRepository<T> implements ICacheRepository<T> {
         }
     }
 
+    @Override
+    public boolean delete(String collection) {
+        try {
+            template.delete(collection);
+            reactiveTemplate.delete(collection);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     @Override
     public boolean delete(String collection, String hkey) {

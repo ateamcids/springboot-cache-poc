@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class TaskServiceImpl implements ITaskService {
 
-    static String fooResourceUrl = "http://172.16.18.154:3000/tasks";
+    static String fooResourceUrl = "http://localhost:3000/tasks";
 
     ICacheStoreService storeService;
 
@@ -41,10 +41,10 @@ public class TaskServiceImpl implements ITaskService {
         List<TaskModel> lista = (List<TaskModel>) response.getBody();
         CacheResponseStatus a = null;
         if (lista != null && !lista.isEmpty()) {
-          a = storeService.add(lista, fooResourceUrl, headers);
+            a = storeService.add(lista, fooResourceUrl, headers);
         }
 
-        if (a.getStatus() == HttpStatus.NOT_MODIFIED){
+        if (a.getStatus() == HttpStatus.NOT_MODIFIED) {
             //todo recomendado enviar un 304
             return null;
         }
