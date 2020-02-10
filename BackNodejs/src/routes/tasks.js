@@ -6,6 +6,7 @@ const Task = require('../models/Task');
 
 router.get('/tasks', async (req,res)=>{
     const tasks = await Task.find();
+    console.log(req.headers);
     res.set('Cache-Control','public');
     res.json(tasks);
 });

@@ -142,6 +142,19 @@ public class CacheRepository<T> implements ICacheRepository<T> {
             return null;
         }
     }
+    @Override
+    public T find(String collection, Class<T> tClass) {
+        try {
+            String jsonObj = String.valueOf(template.opsForHash().entries(collection));
+            return (T) jsonObj;
+           // return OBJECT_MAPPER.readValue(jsonObj, tClass);
+        } catch (Exception e) {
+            if (e.getMessage() == null) {
+            } else {
+            }
+            return null;
+        }
+    }
 
     @Override
     public Boolean isAvailable() {

@@ -11,6 +11,8 @@ import java.util.concurrent.TimeUnit;
 public interface ICacheStoreService<T> {
     T find(String collection, String hkey, Class<T> tClass);
 
+    T find(String collection, Class<T> tClass);
+
     Mono<T> findReactive(String collection, String hkey, Class<T> tClass);
 
     boolean addCollection(String collection, String hkey, T object);

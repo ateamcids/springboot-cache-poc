@@ -23,6 +23,9 @@ public interface ICacheRepository<T> {
 
     T find(String collection, String hkey, Class<T> tClass);
 
+    T find(String collection, Class<T> tClass);
+
+
     Mono<T> findReactive(String collection, String hkey, Class<T> tClass);
 
     Boolean isAvailable();
