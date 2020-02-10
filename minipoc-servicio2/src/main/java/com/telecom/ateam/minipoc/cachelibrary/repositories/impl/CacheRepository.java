@@ -142,6 +142,17 @@ public class CacheRepository<T> implements ICacheRepository<T> {
             return null;
         }
     }
+
+    public String first(String collection) {
+        try {
+            Map<String,Object> map = template.opsForHash().entries(collection);
+           String value = map.keySet().toArray()[0].toString();
+           return value;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     @Override
     public T find(String collection, Class<T> tClass) {
         try {

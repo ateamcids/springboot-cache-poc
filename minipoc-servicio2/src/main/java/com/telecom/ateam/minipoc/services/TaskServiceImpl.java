@@ -131,18 +131,13 @@ public class TaskServiceImpl implements ITaskService {
         String result = (String) storeService.find(fooResourceUrl, String.class);
 
         if (result != null && !result.isEmpty()) {
-            headers.set("If-None-Match", splitEtag(result));
+            String eTag = storeService.first(fooResourceUrl);
+            headers.set("If-None-Match", eTag);
             HttpEntity entity = new HttpEntity(headers);
             RestTemplate restTemplate = new RestTemplate();
             response = restTemplate.exchange(fooResourceUrl, HttpMethod.GET, entity, List.class);
         }
         return response;
-    }
-
-    private String splitEtag(String eTag) {
-        String[] resultArray;
-        resultArray = eTag.split("=");
-        return resultArray[0].substring(1);
     }
 
 }

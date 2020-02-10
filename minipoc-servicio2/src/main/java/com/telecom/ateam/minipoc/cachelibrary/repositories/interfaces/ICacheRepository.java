@@ -36,4 +36,6 @@ public interface ICacheRepository<T> {
 
     Map completeCollection(String collection);
 
+    public String first(String collection);
+
 }
