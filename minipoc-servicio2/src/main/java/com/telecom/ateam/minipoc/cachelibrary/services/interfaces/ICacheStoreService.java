@@ -13,6 +13,8 @@ public interface ICacheStoreService<T> {
 
     T find(String collection, Class<T> tClass);
 
+    public String first(String collection);
+
     Mono<T> findReactive(String collection, String hkey, Class<T> tClass);
 
     boolean addCollection(String collection, String hkey, T object);
