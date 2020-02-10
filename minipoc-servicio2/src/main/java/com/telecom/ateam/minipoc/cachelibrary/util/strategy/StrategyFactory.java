@@ -17,7 +17,7 @@ public class StrategyFactory {
 
     public IStrategy getStrategy(CacheControlEnum cacheControl) {
         if (cacheControl == null || !strategies.containsKey(cacheControl)) {
-            throw new IllegalArgumentException("Invalid " + cacheControl);
+            return null;
         }
         return strategies.get(cacheControl);
     }

@@ -88,7 +88,6 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     }
 
 
-
     public Mono<T> findReactive(String collection, String hkey, Class<T> tClass) {
 
         try {
@@ -109,6 +108,16 @@ public class CacheRepository<T> implements ICacheRepository<T> {
         }
     }
 
+    @Override
+    public boolean delete(String collection) {
+        try {
+            template.delete(collection);
+            reactiveTemplate.delete(collection);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     @Override
     public boolean delete(String collection, String hkey) {
@@ -126,6 +135,19 @@ public class CacheRepository<T> implements ICacheRepository<T> {
         try {
             String jsonObj = String.valueOf(template.opsForHash().get(collection, hkey));
             return OBJECT_MAPPER.readValue(jsonObj, tClass);
+        } catch (Exception e) {
+            if (e.getMessage() == null) {
+            } else {
+            }
+            return null;
+        }
+    }
+    @Override
+    public T find(String collection, Class<T> tClass) {
+        try {
+            String jsonObj = String.valueOf(template.opsForHash().entries(collection));
+            return (T) jsonObj;
+           // return OBJECT_MAPPER.readValue(jsonObj, tClass);
         } catch (Exception e) {
             if (e.getMessage() == null) {
             } else {

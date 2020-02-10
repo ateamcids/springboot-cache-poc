@@ -5,7 +5,7 @@ import com.telecom.ateam.minipoc.models.TaskModel;
 import com.telecom.ateam.minipoc.services.IDashboardService;
 import com.telecom.ateam.minipoc.models.DashboardModel;
 import com.telecom.ateam.minipoc.services.ITaskService;
-import javafx.concurrent.Task;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -16,6 +16,7 @@ import java.util.List;
 public class DashboardController {
     final IDashboardService dashboardService;
     final ITaskService taskService;
+
     public DashboardController(IDashboardService dashboardService, ITaskService taskService) {
         this.dashboardService = dashboardService;
         this.taskService = taskService;
@@ -30,6 +31,7 @@ public class DashboardController {
     public Mono<List<DashboardModel>> listarReactive() {
         return dashboardService.requestReactive();
     }
+
     @GetMapping("/reactivePut")
     public Mono<List<TaskModel>> listarReactivePut() {
         return taskService.requestReactivePut();
@@ -39,9 +41,10 @@ public class DashboardController {
     public List<DashboardModel> listarExpires(@PathVariable int expires) throws JsonProcessingException, InterruptedException {
         return dashboardService.requestExpires(expires);
     }
+
     @GetMapping("/standard")
     public List<DashboardModel> dashboard(@RequestParam(name = "collection") String collection, @RequestParam String hkey) {
-        return dashboardService.requestStandard(collection,hkey);
+        return dashboardService.requestStandard(collection, hkey);
     }
 
 }
