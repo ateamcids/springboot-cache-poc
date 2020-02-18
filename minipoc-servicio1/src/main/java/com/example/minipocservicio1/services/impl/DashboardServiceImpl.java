@@ -1,6 +1,5 @@
 package com.example.minipocservicio1.services.impl;
 
-import com.example.minipocservicio1.cachelibrary.repositories.interfaces.ICacheRepositoryOther;
 import com.example.minipocservicio1.cachelibrary.services.interfaces.ICacheStoreService;
 import com.example.minipocservicio1.models.DashboardModel;
 
@@ -27,8 +26,6 @@ public class DashboardServiceImpl implements IDashboardService {
 
     ICacheStoreService storeService;
     List<DashboardModel> listDashboard;
-    @Autowired
-    ICacheRepositoryOther repositoryOther;
 
     public DashboardServiceImpl(ICacheStoreService storeService) {
         this.storeService = storeService;

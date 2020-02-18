@@ -18,20 +18,22 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
-
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
+
+import javax.servlet.Filter;
+
 
 @Configuration
 @EnableConfigurationProperties(RedisProperties.class)
-public class RedisConfig{
+public class RedisConfig {
     @Value("${redis.host}")
     private String redisHost;
 
     @Value("${redis.port}")
     private int redisPort;
-
 
     @Qualifier("this")
     @Bean(destroyMethod = "shutdown")
@@ -45,7 +47,7 @@ public class RedisConfig{
     }
 
     @Bean
-    public ClientOptions clientOptions(){
+    public ClientOptions clientOptions() {
         return ClientOptions.builder()
                 .disconnectedBehavior(ClientOptions.DisconnectedBehavior.REJECT_COMMANDS)
                 .autoReconnect(true)
@@ -62,12 +64,12 @@ public class RedisConfig{
     @Bean
     @Qualifier("reactiveConnectionFactory")
     public ReactiveRedisConnectionFactory reactiveConnectionFactory(RedisStandaloneConfiguration redisStandaloneConfiguration,
-                                                    LettucePoolingClientConfiguration lettucePoolConfig) {
+                                                                    LettucePoolingClientConfiguration lettucePoolConfig) {
         return new LettuceConnectionFactory(redisStandaloneConfiguration, lettucePoolConfig);
     }
 
     @Bean
-    LettucePoolingClientConfiguration lettucePoolConfig(ClientOptions options, @Qualifier("this") ClientResources dcr){
+    LettucePoolingClientConfiguration lettucePoolConfig(ClientOptions options, @Qualifier("this") ClientResources dcr) {
         return LettucePoolingClientConfiguration.builder()
                 .poolConfig(new GenericObjectPoolConfig())
                 .clientOptions(options)
@@ -84,15 +86,24 @@ public class RedisConfig{
     @Primary
     public ReactiveRedisTemplate<Object, Object> reactiveRedisTemplate(
             @Qualifier("reactiveConnectionFactory") ReactiveRedisConnectionFactory redisConnectionFactory) {
-        ReactiveRedisTemplate<Object, Object> template = new ReactiveRedisTemplate(redisConnectionFactory,RedisSerializationContext.string());
+        ReactiveRedisTemplate<Object, Object> template = new ReactiveRedisTemplate(redisConnectionFactory, RedisSerializationContext.string());
         return template;
     }
+
     @Bean
     @ConditionalOnMissingBean(name = "redisTemplate")
     @Primary
     public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<Object, Object> template = new RedisTemplate();
         template.setConnectionFactory(redisConnectionFactory);
+        template.setDefaultSerializer(new StringRedisSerializer());
         return template;
+    }
+
+    @Bean
+    public Filter filter() {
+        ShallowEtagHeaderFilter filter = new ShallowEtagHeaderFilter();
+        return filter;
+
     }
 }
