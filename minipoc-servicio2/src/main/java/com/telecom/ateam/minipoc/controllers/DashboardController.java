@@ -32,6 +32,11 @@ public class DashboardController {
         return dashboardService.requestReactive();
     }
 
+    @GetMapping("/reactiveTasks")
+    public List<TaskModel> listarReactiveTasks() throws JsonProcessingException, InterruptedException {
+        return taskService.requestReactive();
+    }
+
     @GetMapping("/reactivePut")
     public Mono<List<TaskModel>> listarReactivePut() {
         return taskService.requestReactivePut();
