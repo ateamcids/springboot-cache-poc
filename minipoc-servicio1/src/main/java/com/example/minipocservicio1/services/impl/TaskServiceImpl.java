@@ -1,33 +1,22 @@
-package com.telecom.ateam.minipoc.services;
+package com.example.minipocservicio1.services.impl;
 
+import com.example.minipocservicio1.cachelibrary.model.CacheResponseStatus;
+import com.example.minipocservicio1.services.interfaces.ITaskService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.telecom.ateam.minipoc.cachelibrary.model.CacheResponseStatus;
-import com.telecom.ateam.minipoc.cachelibrary.services.interfaces.ICacheStoreService;
-import com.telecom.ateam.minipoc.models.TaskModel;
+import com.example.minipocservicio1.cachelibrary.services.interfaces.ICacheStoreService;
+import com.example.minipocservicio1.models.TaskModel;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 @Service
 public class TaskServiceImpl implements ITaskService {
 
-    private static final ObjectMapper OBJECT_MAPPER;
-    private static final TimeZone DEFAULT_TIMEZONE = TimeZone.getTimeZone("UTC");
-
-    static {
-        OBJECT_MAPPER = new ObjectMapper();
-        OBJECT_MAPPER.setTimeZone(DEFAULT_TIMEZONE);
-    }
-
-    static String fooResourceUrl = "http://localhost:3000/tasks";
+    static String fooResourceUrl = "http://localhost:8080/api/v1/microServicio2/dashboard";
 
     ICacheStoreService storeService;
 
@@ -40,6 +29,14 @@ public class TaskServiceImpl implements ITaskService {
         ResponseEntity<List> response = makeRequestParams();
         HttpHeaders headers = response.getHeaders();
         String etag = headers.getETag();
+        /* List<TaskModel> result ;*/
+   /*     List result = (List) storeService.find(fooResourceUrl, etag, List.class);
+
+        if (result != null && !result.isEmpty()) {
+            List<TaskModel> lista = (List<TaskModel>) result;
+            return lista;
+        }
+*/
         List<TaskModel> lista = (List<TaskModel>) response.getBody();
         CacheResponseStatus a = null;
         if (lista != null && !lista.isEmpty()) {
@@ -55,33 +52,13 @@ public class TaskServiceImpl implements ITaskService {
         return lista;
     }
 
-   /* public Mono<List<TaskModel>> requestReactive() {
+    public Mono<List<TaskModel>> requestReactive() {
         ResponseEntity<List> response = makeRequest();
         HttpHeaders headers = response.getHeaders();
         String etag = headers.getETag();
 
         // Leer
         return storeService.findReactive(fooResourceUrl, etag, List.class);
-    }*/
-
-    public List<TaskModel> requestReactive() throws JsonProcessingException, InterruptedException {
-
-
-        ResponseEntity<List> response = makeRequestParams();
-        HttpHeaders headers = response.getHeaders();
-        String etag = headers.getETag();
-
-        List<TaskModel> lista = response.getBody();
-
-        if (lista != null && !lista.isEmpty()) {
-            storeService.addReactive(lista, fooResourceUrl, headers).block();
-        }
-
-        if (response.getStatusCode() == HttpStatus.NOT_MODIFIED) {
-            lista = (List<TaskModel>) storeService.findReactive(fooResourceUrl, etag, List.class).block();
-        }
-
-        return lista;
     }
 
     public Mono<List<TaskModel>> requestReactivePut() {
@@ -154,13 +131,18 @@ public class TaskServiceImpl implements ITaskService {
         String result = (String) storeService.find(fooResourceUrl, String.class);
 
         if (result != null && !result.isEmpty()) {
-            String eTag = storeService.first(fooResourceUrl);
-            headers.set("If-None-Match", eTag);
+            headers.set("If-None-Match", splitEtag(result));
             HttpEntity entity = new HttpEntity(headers);
             RestTemplate restTemplate = new RestTemplate();
             response = restTemplate.exchange(fooResourceUrl, HttpMethod.GET, entity, List.class);
         }
         return response;
+    }
+
+    private String splitEtag(String eTag) {
+        String[] resultArray;
+        resultArray = eTag.split("=");
+        return resultArray[0].substring(1);
     }
 
 }
