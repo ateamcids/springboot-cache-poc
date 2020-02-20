@@ -89,7 +89,14 @@ public class CacheStoreService<T> implements ICacheStoreService<T> {
         return cacheRepository.find(collection, tClass);
     }
 
+
+    public String first(String collection) {
+        return cacheRepository.first(collection);
+    }
+
     public Mono<T> findReactive(String collection, String hkey, Class<T> tClass) {
         return cacheRepository.findReactive(collection, hkey, tClass);
     }
+
+
 }
