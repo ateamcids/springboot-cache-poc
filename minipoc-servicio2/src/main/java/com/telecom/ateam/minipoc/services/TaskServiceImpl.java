@@ -69,7 +69,7 @@ public class TaskServiceImpl implements ITaskService {
         lista = (List<TaskModel>) response.getBody();
         if (lista != null && !lista.isEmpty()) {
             try {
-                storeService.addReactive(lista, fooResourceUrl, headers).subscribe(y -> System.out.println(y.toString()));
+                storeService.addReactive(lista, fooResourceUrl, headers).subscribe(y -> System.out.println("holaaaaaa" + y.toString()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
