@@ -9,13 +9,8 @@ import com.example.cacheLibrary.util.strategy.CacheControlEnum;
 import com.example.cacheLibrary.util.strategy.CacheControlStrategyResponse;
 import com.example.cacheLibrary.util.strategy.IStrategy;
 import com.example.cacheLibrary.util.strategy.StrategyFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -26,18 +21,17 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class CacheStoreService<T> implements ICacheStoreService<T> {
 
-    @Autowired
-     ICacheRepository<T> cacheRepository;
 
-    @Autowired
-     StrategyFactory strategyFactory;
-    public CacheStoreService() {
-    }
+    private final ICacheRepository<T> cacheRepository;
+
+    private final StrategyFactory strategyFactory;
 
     public CacheStoreService(ICacheRepository<T> cacheRepository, StrategyFactory strategyFactory) {
         this.cacheRepository = cacheRepository;
         this.strategyFactory = strategyFactory;
     }
+
+
 
     public boolean addCollection(String collection, String hkey, T object) {
         return cacheRepository.add(collection, hkey, object);
