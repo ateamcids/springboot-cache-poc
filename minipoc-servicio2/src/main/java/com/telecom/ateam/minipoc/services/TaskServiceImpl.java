@@ -1,22 +1,16 @@
 package com.telecom.ateam.minipoc.services;
 
-import com.example.cacheLibrary.services.impl.CacheStoreService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.example.cacheLibrary.model.CacheResponseStatus;
 import com.example.cacheLibrary.services.interfaces.ICacheStoreService;
 import com.telecom.ateam.minipoc.models.TaskModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -34,14 +28,12 @@ public class TaskServiceImpl implements ITaskService {
     static String fooResourceUrl = "http://localhost:3000/tasks";
 
 
-    ICacheStoreService storeService;
+    private final ICacheStoreService storeService;
+
 
     public TaskServiceImpl(ICacheStoreService storeService) {
+
         this.storeService = storeService;
-    }
-
-    public TaskServiceImpl() {
-
     }
 
     public List<TaskModel> request() throws JsonProcessingException, InterruptedException {

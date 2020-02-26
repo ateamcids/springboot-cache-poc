@@ -5,8 +5,6 @@ import com.telecom.ateam.minipoc.models.DashboardModel;
 import com.telecom.ateam.minipoc.models.TaskModel;
 import com.telecom.ateam.minipoc.services.IDashboardService;
 import com.telecom.ateam.minipoc.services.ITaskService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -15,22 +13,18 @@ import java.util.List;
 @RequestMapping("/api/v1/microServicio2/dashboard")
 public class DashboardController {
 
-    @Autowired
-     IDashboardService dashboardService;
-    @Autowired
-    ITaskService taskService;
+    private final IDashboardService dashboardService;
+    private final ITaskService taskService;
+
 
     public DashboardController(IDashboardService dashboardService, ITaskService taskService) {
         this.dashboardService = dashboardService;
         this.taskService = taskService;
     }
 
-    public DashboardController() {
-    }
-
     @GetMapping
-    public List<TaskModel> listar() throws JsonProcessingException, InterruptedException {
-        return taskService.request();
+    public List<DashboardModel> listar() throws JsonProcessingException, InterruptedException {
+        return dashboardService.request();
     }
 
     @GetMapping("/reactive")
