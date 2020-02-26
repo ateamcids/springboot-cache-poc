@@ -9,6 +9,7 @@ mongoose.connect('mongodb://localhost/mevn-database')
 
 app.use(morgan('dev'));
 app.use(express.json());
+app.set('etag',false);
 
 app.use(require('./routes/tasks'));
 

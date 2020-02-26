@@ -157,8 +157,8 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     public T find(String collection, Class<T> tClass) {
         try {
             String jsonObj = String.valueOf(template.opsForHash().entries(collection));
-            return (T) jsonObj;
-            // return OBJECT_MAPPER.readValue(jsonObj, tClass);
+            //return (T) jsonObj;
+           return OBJECT_MAPPER.readValue(jsonObj, tClass);
         } catch (Exception e) {
             if (e.getMessage() == null) {
             } else {

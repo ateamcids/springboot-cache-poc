@@ -27,10 +27,16 @@ public class DashboardController {
         return dashboardService.request();
     }
 
+    @GetMapping("/max-age")
+    public List<TaskModel> listarMaxAge(){
+        return taskService.requestExpires2();
+    }
+
     @GetMapping("/reactive")
     public Mono<List<DashboardModel>> listarReactive() {
         return dashboardService.requestReactive();
     }
+
 
     @GetMapping("/reactiveTasks")
     public List<TaskModel> listarReactiveTasks() throws JsonProcessingException, InterruptedException {

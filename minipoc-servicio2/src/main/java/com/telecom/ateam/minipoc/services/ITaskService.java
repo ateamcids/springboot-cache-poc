@@ -18,5 +18,9 @@ public interface ITaskService {
 
     List<TaskModel> requestExpires(int expires) throws JsonProcessingException, InterruptedException;
 
+    List<TaskModel> requestExpires2();
+
     List<TaskModel> requestStandard(String collection, String hkey);
+
+
 }
