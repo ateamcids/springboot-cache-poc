@@ -15,10 +15,10 @@ import java.util.List;
 @RequestMapping("/api/v1/microServicio2/dashboard")
 public class DashboardController {
 
-@Autowired
+    @Autowired
      IDashboardService dashboardService;
-@Autowired
-     ITaskService taskService;
+    @Autowired
+    ITaskService taskService;
 
     public DashboardController(IDashboardService dashboardService, ITaskService taskService) {
         this.dashboardService = dashboardService;

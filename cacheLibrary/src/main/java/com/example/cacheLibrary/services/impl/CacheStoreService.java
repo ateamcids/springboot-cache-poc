@@ -23,11 +23,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-@Component
+@Service
 public class CacheStoreService<T> implements ICacheStoreService<T> {
 
+    @Autowired
      ICacheRepository<T> cacheRepository;
 
+    @Autowired
      StrategyFactory strategyFactory;
     public CacheStoreService() {
     }

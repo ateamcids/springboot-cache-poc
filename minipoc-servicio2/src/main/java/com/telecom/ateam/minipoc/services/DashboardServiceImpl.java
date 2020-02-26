@@ -19,6 +19,7 @@ public class DashboardServiceImpl implements IDashboardService {
 
     static String fooResourceUrl = "http://200.61.215.10:8090/dashboard";
 
+    @Autowired
     ICacheStoreService storeService;
 
     public DashboardServiceImpl(){
