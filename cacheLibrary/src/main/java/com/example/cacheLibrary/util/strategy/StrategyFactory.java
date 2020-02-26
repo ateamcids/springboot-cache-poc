@@ -1,11 +1,11 @@
 package com.example.cacheLibrary.util.strategy;
 
-import org.springframework.http.CacheControl;
 import org.springframework.stereotype.Component;
 
 import java.util.EnumMap;
 import java.util.Map;
 
+@Component
 public class StrategyFactory {
 
     private Map<CacheControlEnum, IStrategy> strategies = new EnumMap<>(CacheControlEnum.class);

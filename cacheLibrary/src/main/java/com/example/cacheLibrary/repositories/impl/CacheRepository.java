@@ -20,8 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 @Repository
 public class CacheRepository<T> implements ICacheRepository<T> {
-
-     ReactiveRedisTemplate reactiveTemplate;
+    ReactiveRedisTemplate reactiveTemplate;
 
     RedisTemplate template;
 
@@ -33,7 +32,7 @@ public class CacheRepository<T> implements ICacheRepository<T> {
         OBJECT_MAPPER.setTimeZone(DEFAULT_TIMEZONE);
     }
 
-    public CacheRepository(ReactiveRedisTemplate reactiveTemplate, RedisTemplate template) {
+    public CacheRepository(    @Qualifier("reactiveRedisTemplate") ReactiveRedisTemplate reactiveTemplate,@Qualifier("redisTemplate")  RedisTemplate template) {
         this.reactiveTemplate = reactiveTemplate;
         this.template = template;
     }
