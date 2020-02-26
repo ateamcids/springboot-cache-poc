@@ -77,15 +77,41 @@ public class TaskServiceImpl implements ITaskService {
         return Mono.just(lista);
     }
 
+    public List<TaskModel> requestExpires2() {
 
-    public List<TaskModel> requestExpires(int expires) throws JsonProcessingException, InterruptedException {
+        List result = (List) storeService.find(fooResourceUrl,fooResourceUrl, List.class);
+
+        if (result != null && !result.isEmpty()) {
+            List<TaskModel> lista = (List<TaskModel>) result;
+            return lista;
+        }
 
 
         ResponseEntity<List> response = makeRequest();
         HttpHeaders headers = response.getHeaders();
         String etag = headers.getETag();
 
-        List result = (List) storeService.find(fooResourceUrl, etag, List.class);
+
+
+        List<TaskModel> lista = (List<TaskModel>) response.getBody();
+        if (lista != null && !lista.isEmpty()) {
+            storeService.add2(lista, fooResourceUrl, headers);
+        }
+
+
+        return lista;
+    }
+
+
+    public List<TaskModel> requestExpires(int expires) throws JsonProcessingException, InterruptedException {
+
+
+
+        ResponseEntity<List> response = makeRequest();
+        HttpHeaders headers = response.getHeaders() ;
+        String etag = headers.getETag();
+
+        List result = (List) storeService.find(fooResourceUrl, List.class);
 
         if (result != null && !result.isEmpty()) {
             List<TaskModel> lista = (List<TaskModel>) result;
@@ -139,5 +165,7 @@ public class TaskServiceImpl implements ITaskService {
         }
         return response;
     }
+
+
 
 }

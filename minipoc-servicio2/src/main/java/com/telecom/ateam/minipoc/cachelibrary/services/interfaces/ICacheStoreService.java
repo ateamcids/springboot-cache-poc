@@ -25,5 +25,7 @@ public interface ICacheStoreService<T> {
 
     CacheResponseStatus add(T object, String requestUrl, HttpHeaders headers);
 
+    CacheResponseStatus add2(T object, String requestUrl, HttpHeaders headers);
+
     Mono<Boolean> addReactive(T object, String requestUrl, HttpHeaders headers) throws JsonProcessingException, InterruptedException;
 }

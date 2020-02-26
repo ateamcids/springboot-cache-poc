@@ -24,7 +24,7 @@ public class DashboardController {
         this.dashboardService = dashboardService;
         this.taskService = taskService;
     }
-
+   // @CacheControl("max")
     @GetMapping
     public List<TaskModel> listar() throws JsonProcessingException, InterruptedException {
         return taskService.request();

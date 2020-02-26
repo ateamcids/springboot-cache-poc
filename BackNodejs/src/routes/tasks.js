@@ -4,10 +4,11 @@ const router = express.Router();
 const Task = require('../models/Task');
 
 
+test = ['max-age=30, public'];
 router.get('/tasks', async (req,res)=>{
     const tasks = await Task.find();
     console.log(req.headers);
-    res.set('Cache-Control','public');
+    res.set('Cache-Control',test);
     res.json(tasks);
 });
 
