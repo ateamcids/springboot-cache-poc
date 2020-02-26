@@ -1,21 +1,21 @@
 package com.telecom.ateam.minipoc.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.telecom.ateam.minipoc.models.DashboardModel;
 import com.telecom.ateam.minipoc.models.TaskModel;
 import com.telecom.ateam.minipoc.services.IDashboardService;
-import com.telecom.ateam.minipoc.models.DashboardModel;
 import com.telecom.ateam.minipoc.services.ITaskService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1/microServicio2/dashboard")
 public class DashboardController {
-    final IDashboardService dashboardService;
-    final ITaskService taskService;
+
+    private final IDashboardService dashboardService;
+    private final ITaskService taskService;
+
 
     public DashboardController(IDashboardService dashboardService, ITaskService taskService) {
         this.dashboardService = dashboardService;
@@ -23,14 +23,20 @@ public class DashboardController {
     }
 
     @GetMapping
-    public List<TaskModel> listar() throws JsonProcessingException, InterruptedException {
-        return taskService.request();
+    public List<DashboardModel> listar() throws JsonProcessingException, InterruptedException {
+        return dashboardService.request();
+    }
+
+    @GetMapping("/max-age")
+    public List<TaskModel> listarMaxAge(){
+        return taskService.requestExpires2();
     }
 
     @GetMapping("/reactive")
     public Mono<List<DashboardModel>> listarReactive() {
         return dashboardService.requestReactive();
     }
+
 
     @GetMapping("/reactiveTasks")
     public List<TaskModel> listarReactiveTasks() throws JsonProcessingException, InterruptedException {
