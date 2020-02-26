@@ -1,25 +1,31 @@
 package com.telecom.ateam.minipoc.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.telecom.ateam.minipoc.models.DashboardModel;
 import com.telecom.ateam.minipoc.models.TaskModel;
 import com.telecom.ateam.minipoc.services.IDashboardService;
-import com.telecom.ateam.minipoc.models.DashboardModel;
 import com.telecom.ateam.minipoc.services.ITaskService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1/microServicio2/dashboard")
 public class DashboardController {
-    final IDashboardService dashboardService;
-    final ITaskService taskService;
+
+@Autowired
+     IDashboardService dashboardService;
+@Autowired
+     ITaskService taskService;
 
     public DashboardController(IDashboardService dashboardService, ITaskService taskService) {
         this.dashboardService = dashboardService;
         this.taskService = taskService;
+    }
+
+    public DashboardController() {
     }
 
     @GetMapping

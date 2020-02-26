@@ -1,8 +1,10 @@
 package com.telecom.ateam.minipoc.services;
 
+import com.example.cacheLibrary.services.interfaces.ICacheStoreService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.telecom.ateam.minipoc.cachelibrary.services.interfaces.ICacheStoreService;
+
 import com.telecom.ateam.minipoc.models.DashboardModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,10 @@ public class DashboardServiceImpl implements IDashboardService {
     static String fooResourceUrl = "http://200.61.215.10:8090/dashboard";
 
     ICacheStoreService storeService;
+
+    public DashboardServiceImpl(){
+    }
+
 
     public DashboardServiceImpl(ICacheStoreService storeService) {
         this.storeService = storeService;
