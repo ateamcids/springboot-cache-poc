@@ -27,10 +27,6 @@ public class DashboardController {
         return dashboardService.request();
     }
 
-    @GetMapping("/max-age")
-    public List<TaskModel> listarMaxAge(){
-        return taskService.requestExpires2();
-    }
 
     @GetMapping("/reactive")
     public Mono<List<DashboardModel>> listarReactive() {
@@ -38,16 +34,8 @@ public class DashboardController {
     }
 
 
-    @GetMapping("/reactiveTasks")
-    public List<TaskModel> listarReactiveTasks() throws JsonProcessingException, InterruptedException {
-        return taskService.requestReactive();
-    }
 
-    @GetMapping("/reactivePut")
-    public Mono<List<TaskModel>> listarReactivePut() {
-       // taskService.requestReactivePut().subscribe( (x) -> x  );
-        return taskService.requestReactivePut();
-    }
+
 
     @GetMapping("/expires/{expires}")
     public List<DashboardModel> listarExpires(@PathVariable int expires) throws JsonProcessingException, InterruptedException {

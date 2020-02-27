@@ -38,7 +38,7 @@ public class TaskServiceImpl implements ITaskService {
 
     public List<TaskModel> request() throws JsonProcessingException, InterruptedException {
 
-        ResponseEntity<List> response = makeRequestParams();
+        ResponseEntity<List> response = makeRequestSendParams();
         HttpHeaders headers = response.getHeaders();
         String etag = headers.getETag();
         List<TaskModel> lista = (List<TaskModel>) response.getBody();
@@ -56,19 +56,10 @@ public class TaskServiceImpl implements ITaskService {
         return lista;
     }
 
-   /* public Mono<List<TaskModel>> requestReactive() {
-        ResponseEntity<List> response = makeRequest();
-        HttpHeaders headers = response.getHeaders();
-        String etag = headers.getETag();
-
-        // Leer
-        return storeService.findReactive(fooResourceUrl, etag, List.class);
-    }*/
-
     public List<TaskModel> requestReactive() throws JsonProcessingException, InterruptedException {
 
 
-        ResponseEntity<List> response = makeRequestParams();
+        ResponseEntity<List> response = makeRequestSendParams();
         HttpHeaders headers = response.getHeaders();
         String etag = headers.getETag();
 
@@ -101,9 +92,10 @@ public class TaskServiceImpl implements ITaskService {
         return Mono.just(lista);
     }
 
-    public List<TaskModel> requestExpires2() {
 
-        List result = (List) storeService.find(fooResourceUrl,fooResourceUrl, List.class);
+    public List<TaskModel> requestExpires() {
+
+        List result = (List) storeService.find(fooResourceUrl, fooResourceUrl, List.class);
 
         if (result != null && !result.isEmpty()) {
             List<TaskModel> lista = (List<TaskModel>) result;
@@ -116,23 +108,24 @@ public class TaskServiceImpl implements ITaskService {
         String etag = headers.getETag();
 
 
-
         List<TaskModel> lista = (List<TaskModel>) response.getBody();
         if (lista != null && !lista.isEmpty()) {
-            storeService.add2(lista, fooResourceUrl, headers);
+            storeService.add(lista, fooResourceUrl, headers);
         }
 
 
         return lista;
     }
 
+  /*  public List<TaskModel> requestReactiveExpires() throws JsonProcessingException, InterruptedException {
 
-    public List<TaskModel> requestExpires(int expires) throws JsonProcessingException, InterruptedException {
+    }*/
 
+    public List<TaskModel> requestExpiresWithParams(int expires) throws JsonProcessingException, InterruptedException {
 
 
         ResponseEntity<List> response = makeRequest();
-        HttpHeaders headers = response.getHeaders() ;
+        HttpHeaders headers = response.getHeaders();
         String etag = headers.getETag();
 
         List result = (List) storeService.find(fooResourceUrl, List.class);
@@ -174,7 +167,7 @@ public class TaskServiceImpl implements ITaskService {
         return response;
     }
 
-    private ResponseEntity<List> makeRequestParams() {
+    private ResponseEntity<List> makeRequestSendParams() {
         HttpHeaders headers = new HttpHeaders();
         ResponseEntity<List> response = null;
         String result;
@@ -197,7 +190,6 @@ public class TaskServiceImpl implements ITaskService {
         return response;
 
     }
-
 
 
 }

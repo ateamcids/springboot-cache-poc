@@ -22,6 +22,8 @@ public interface ICacheRepository<T> {
 
     boolean delete(String collection);
 
+    boolean deleteReactive(String collection);
+
     boolean delete(String collection, String hkey);
 
     T find(String collection, String hkey, Class<T> tClass);
