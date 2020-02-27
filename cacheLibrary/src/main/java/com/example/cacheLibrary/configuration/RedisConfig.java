@@ -98,10 +98,11 @@ public class RedisConfig {
         return template;
     }
 
-    @Bean
+   /* @Bean
+    @Primary
     public Filter filter() {
         ShallowEtagHeaderFilter filter = new ShallowEtagHeaderFilter();
         return filter;
 
-    }
+    }*/
 }

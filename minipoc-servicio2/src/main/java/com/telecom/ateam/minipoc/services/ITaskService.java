@@ -11,14 +11,13 @@ public interface ITaskService {
 
     List<TaskModel> requestReactive() throws JsonProcessingException, InterruptedException;
 
-   // Flux<List<TaskModel>> requestReactiveFlux() throws JsonProcessingException, InterruptedException;
-
     Mono<List<TaskModel>> requestReactivePut();
 
+   /* List<TaskModel> requestReactiveExpires() throws JsonProcessingException, InterruptedException;*/
 
-    List<TaskModel> requestExpires(int expires) throws JsonProcessingException, InterruptedException;
+    List<TaskModel> requestExpires();
 
-    List<TaskModel> requestExpires2();
+    List<TaskModel> requestExpiresWithParams(int expires) throws JsonProcessingException, InterruptedException;
 
     List<TaskModel> requestStandard(String collection, String hkey);
 

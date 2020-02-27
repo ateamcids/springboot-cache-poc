@@ -45,13 +45,13 @@ public class CacheStoreService<T> implements ICacheStoreService<T> {
         return cacheRepository.add(collection, hkey, object, date);
     }
 
-    public CacheResponseStatus add(T object, String requestUrl, HttpHeaders headers) {
+   /* public CacheResponseStatus add(T object, String requestUrl, HttpHeaders headers) {
         String hkey = headers.getETag();
         if (hkey == null) hkey = requestUrl;
 
-        /**
+        *//**
          * ETag desarrollado abajo
-         */
+         *//*
         if (cacheRepository.any(requestUrl)) {
             if (cacheRepository.hasKey(requestUrl, hkey)) {
                 return new CacheResponseStatus("No se ha modificado", HttpStatus.NOT_MODIFIED, true);
@@ -79,9 +79,9 @@ public class CacheStoreService<T> implements ICacheStoreService<T> {
         }
         boolean add = cacheRepository.add(requestUrl, hkey, object);
         return new CacheResponseStatus("Se aplicó estrategia", HttpStatus.OK, add);
-    }
+    }*/
 
-    public CacheResponseStatus add2(T object, String requestUrl, HttpHeaders headers) {
+    public CacheResponseStatus add(T object, String requestUrl, HttpHeaders headers) {
         String hkey = headers.getETag();
         if (hkey == null) hkey = requestUrl;
 
@@ -127,7 +127,7 @@ public class CacheStoreService<T> implements ICacheStoreService<T> {
 
     public Mono<Boolean> addReactive(T object, String requestUrl, HttpHeaders headers) throws JsonProcessingException, InterruptedException {
 
-        String[] cacheControls = Arrays.stream(headers.getCacheControl().split(",")).map(String::trim).toArray(String[]::new);
+      //String[] cacheControls = Arrays.stream(headers.getCacheControl().split(",")).map(String::trim).toArray(String[]::new);
         String hkey = headers.getETag();
         if (hkey == null) hkey = requestUrl;
         return cacheRepository.addReactive(requestUrl, hkey, object);
