@@ -13,9 +13,9 @@ public interface ITaskService {
 
     Mono<List<TaskModel>> requestReactivePut();
 
-   /* List<TaskModel> requestReactiveExpires() throws JsonProcessingException, InterruptedException;*/
+    List<TaskModel> requestReactiveExpires() throws JsonProcessingException, InterruptedException;
 
-    List<TaskModel> requestExpires();
+    List<TaskModel> requestExpires() throws JsonProcessingException, InterruptedException;
 
     List<TaskModel> requestExpiresWithParams(int expires) throws JsonProcessingException, InterruptedException;
 

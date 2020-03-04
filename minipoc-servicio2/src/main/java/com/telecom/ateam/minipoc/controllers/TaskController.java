@@ -25,8 +25,12 @@ public class TaskController {
     }
 
     @GetMapping("/maxAge")
-    public List<TaskModel> listarMaxAge(){
+    public List<TaskModel> listarMaxAge() throws JsonProcessingException, InterruptedException {
         return taskService.requestExpires();
+    }
+    @GetMapping("/reactiveMaxAge")
+    public List<TaskModel> listarReactiveMaxAge() throws JsonProcessingException, InterruptedException {
+        return taskService.requestReactiveExpires();
     }
 
  /*   @GetMapping("/maxAgeReactive")

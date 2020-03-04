@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -19,6 +20,8 @@ public interface ICacheRepository<T> {
     boolean add(String collection, String hkey, T object, Date date);
 
     Mono<Boolean> addReactive(String collection, String hkey, T object) throws JsonProcessingException, InterruptedException;
+
+    Mono<Boolean> addReactive(String collection, String hkey, T object, int timeout, TimeUnit unit) throws JsonProcessingException, InterruptedException;
 
     boolean delete(String collection);
 

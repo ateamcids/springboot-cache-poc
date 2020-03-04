@@ -5,6 +5,7 @@ import com.example.cacheLibrary.model.CacheResponseStatus;
 import org.springframework.http.HttpHeaders;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -24,7 +25,12 @@ public interface ICacheStoreService<T> {
 
     boolean addCollection(String collection, String hkey, T object, Date date);
 
-    CacheResponseStatus add(T object, String requestUrl, HttpHeaders headers);
+    CacheResponseStatus add(T object, String requestUrl, HttpHeaders headers) throws JsonProcessingException, InterruptedException;
 
-    Mono<Boolean> addReactive(T object, String requestUrl, HttpHeaders headers) throws JsonProcessingException, InterruptedException;
+    Mono<CacheResponseStatus> addReactive(T object, String requestUrl, HttpHeaders headers) throws JsonProcessingException, InterruptedException;
+
+    Mono<Boolean> addReactiveCollection(T object, String requestUrl, HttpHeaders headers) throws JsonProcessingException, InterruptedException;
+
+    Mono<Boolean> addReactiveCollection(T object, String requestUrl, int timeOut, TimeUnit unit) throws JsonProcessingException, InterruptedException;
+
 }

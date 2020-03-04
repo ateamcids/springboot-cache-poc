@@ -13,6 +13,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
 import java.util.TimeZone;
@@ -88,6 +90,16 @@ public class CacheRepository<T> implements ICacheRepository<T> {
         }
     }
 
+    public Mono<Boolean> addReactive(String collection, String hkey, T object, int timeout, TimeUnit unit) throws JsonProcessingException {
+        try {
+            String jsonObject = OBJECT_MAPPER.writeValueAsString(object);
+            reactiveTemplate.opsForHash().put(collection, hkey, jsonObject).block();
+            return reactiveTemplate.expire(collection, Duration.ofSeconds(timeout));
+        } catch (Exception e) {
+            throw e;
+            // return false;
+        }
+    }
 
     public Mono<T> findReactive(String collection, String hkey, Class<T> tClass) {
 
