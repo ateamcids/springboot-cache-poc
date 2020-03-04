@@ -135,8 +135,6 @@ public class TaskServiceImpl implements ITaskService {
         if (lista != null && !lista.isEmpty()) {
             storeService.addReactive(lista, fooResourceUrl, headers).block();
         }
-
-
         return lista;
     }
 

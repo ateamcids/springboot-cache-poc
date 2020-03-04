@@ -17,8 +17,6 @@ public interface ICacheStoreService<T> {
 
     public String first(String collection);
 
-    Mono<T> findReactive(String collection, String hkey, Class<T> tClass);
-
     boolean addCollection(String collection, String hkey, T object);
 
     boolean addCollection(String collection, String hkey, T object, int timeout, TimeUnit unit);
@@ -26,6 +24,8 @@ public interface ICacheStoreService<T> {
     boolean addCollection(String collection, String hkey, T object, Date date);
 
     CacheResponseStatus add(T object, String requestUrl, HttpHeaders headers) throws JsonProcessingException, InterruptedException;
+
+    Mono<T> findReactive(String collection, String hkey, Class<T> tClass);
 
     Mono<CacheResponseStatus> addReactive(T object, String requestUrl, HttpHeaders headers) throws JsonProcessingException, InterruptedException;
 

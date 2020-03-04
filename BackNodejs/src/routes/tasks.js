@@ -4,7 +4,7 @@ const router = express.Router();
 const Task = require('../models/Task');
 
 
-test = ['public'];
+test = ['max-age=20,public'];
 router.get('/tasks', async (req,res)=>{
     const tasks = await Task.find();
     console.log(req.headers);

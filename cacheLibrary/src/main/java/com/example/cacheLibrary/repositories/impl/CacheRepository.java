@@ -44,9 +44,6 @@ public class CacheRepository<T> implements ICacheRepository<T> {
         template.opsForHash().put(collection, hkey, jsonObject);
     }
 
-    // implement methods
-
-
     public boolean add(String collection, String hkey, T object, int timeout, TimeUnit unit) {
         try {
             addCollection(collection, hkey, object);
@@ -86,7 +83,6 @@ public class CacheRepository<T> implements ICacheRepository<T> {
             return reactiveTemplate.opsForHash().put(collection, hkey, jsonObject);
         } catch (Exception e) {
             throw e;
-            // return false;
         }
     }
 
@@ -97,7 +93,6 @@ public class CacheRepository<T> implements ICacheRepository<T> {
             return reactiveTemplate.expire(collection, Duration.ofSeconds(timeout));
         } catch (Exception e) {
             throw e;
-            // return false;
         }
     }
 
@@ -117,7 +112,6 @@ public class CacheRepository<T> implements ICacheRepository<T> {
             });
         } catch (Exception e) {
             throw e;
-            // return false;
         }
     }
 

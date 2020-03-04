@@ -45,43 +45,6 @@ class CacheStoreService<T> implements ICacheStoreService<T> {
         return cacheRepository.add(collection, hkey, object, date);
     }
 
-   /* public CacheResponseStatus add(T object, String requestUrl, HttpHeaders headers) {
-        String hkey = headers.getETag();
-        if (hkey == null) hkey = requestUrl;
-
-        */
-
-    /**
-     * ETag desarrollado abajo
-     *//*
-        if (cacheRepository.any(requestUrl)) {
-            if (cacheRepository.hasKey(requestUrl, hkey)) {
-                return new CacheResponseStatus("No se ha modificado", HttpStatus.NOT_MODIFIED, true);
-            } else {
-                //Todo flushear coleccion de esa requestUrl
-                cacheRepository.delete(requestUrl);
-            }
-        }
-
-
-        String[] cacheControls = Arrays.stream(headers.getCacheControl().split(",")).map(String::trim).toArray(String[]::new);
-        IStrategy strategy = null;
-
-        //TODO foreach cada cachecontrol
-        for (String cacheName : cacheControls) {
-
-
-            strategy = strategyFactory.getStrategy(CacheControlEnum.getByCode(cacheName));
-
-            if (strategy != null) {
-                CacheControlStrategyResponse res = strategy.cacheControlStrategy(new CacheModel<T>(object, headers, requestUrl, hkey), cacheRepository);
-                return new CacheResponseStatus("Se aplicó estrategia", res.getStatus(), res.isCaching());
-            }
-
-        }
-        boolean add = cacheRepository.add(requestUrl, hkey, object);
-        return new CacheResponseStatus("Se aplicó estrategia", HttpStatus.OK, add);
-    }*/
     public CacheResponseStatus add(T object, String requestUrl, HttpHeaders headers) throws JsonProcessingException, InterruptedException {
         String hkey = headers.getETag();
         if (hkey == null) hkey = requestUrl;
@@ -104,8 +67,6 @@ class CacheStoreService<T> implements ICacheStoreService<T> {
 
             //TODO foreach cada cachecontrol
             for (String cacheName : cacheControls) {
-
-                // String[] cacheNameSplit = cacheName.split("=");
 
                 strategy = strategyFactory.getStrategy(CacheControlEnum.getByCode(cacheName));
 
@@ -148,8 +109,6 @@ class CacheStoreService<T> implements ICacheStoreService<T> {
 
             //TODO foreach cada cachecontrol
             for (String cacheName : cacheControls) {
-
-                // String[] cacheNameSplit = cacheName.split("=");
 
                 strategy = strategyFactory.getStrategy(CacheControlEnum.getByCode(cacheName));
 
