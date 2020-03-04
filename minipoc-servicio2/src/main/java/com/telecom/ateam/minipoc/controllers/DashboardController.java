@@ -2,7 +2,6 @@ package com.telecom.ateam.minipoc.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.telecom.ateam.minipoc.models.DashboardModel;
-import com.telecom.ateam.minipoc.models.TaskModel;
 import com.telecom.ateam.minipoc.services.IDashboardService;
 import com.telecom.ateam.minipoc.services.ITaskService;
 import org.springframework.web.bind.annotation.*;
@@ -14,12 +13,10 @@ import java.util.List;
 public class DashboardController {
 
     private final IDashboardService dashboardService;
-    private final ITaskService taskService;
 
 
-    public DashboardController(IDashboardService dashboardService, ITaskService taskService) {
+    public DashboardController(IDashboardService dashboardService) {
         this.dashboardService = dashboardService;
-        this.taskService = taskService;
     }
 
     @GetMapping
@@ -32,9 +29,6 @@ public class DashboardController {
     public Mono<List<DashboardModel>> listarReactive() {
         return dashboardService.requestReactive();
     }
-
-
-
 
 
     @GetMapping("/expires/{expires}")
