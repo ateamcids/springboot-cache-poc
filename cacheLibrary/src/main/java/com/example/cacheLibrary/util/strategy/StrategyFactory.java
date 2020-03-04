@@ -1,5 +1,6 @@
 package com.example.cacheLibrary.util.strategy;
 
+import com.example.cacheLibrary.util.strategy.reactive.ReactiveCacheControlMaxAge;
 import org.springframework.stereotype.Component;
 
 import java.util.EnumMap;
@@ -24,6 +25,7 @@ public class StrategyFactory {
     private void initStrategies() {
         strategies.put(CacheControlEnum.MAXAGE, new CacheControlMaxAge());
         strategies.put(CacheControlEnum.NOSTORE, new CacheControlNoStore());
+        strategies.put(CacheControlEnum.MAXAGE, new ReactiveCacheControlMaxAge());
     }
 
 }

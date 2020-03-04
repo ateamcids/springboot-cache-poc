@@ -66,7 +66,7 @@ public class TaskServiceImpl implements ITaskService {
         List<TaskModel> lista = response.getBody();
 
         if (lista != null && !lista.isEmpty()) {
-            storeService.addReactive(lista, fooResourceUrl, headers).block();
+            storeService.addReactiveCollection(lista, fooResourceUrl, headers).block();
         }
 
         if (response.getStatusCode() == HttpStatus.NOT_MODIFIED) {
@@ -84,7 +84,7 @@ public class TaskServiceImpl implements ITaskService {
         lista = (List<TaskModel>) response.getBody();
         if (lista != null && !lista.isEmpty()) {
             try {
-                storeService.addReactive(lista, fooResourceUrl, headers).subscribe(y -> System.out.println(y.toString()));
+                storeService.addReactiveCollection(lista, fooResourceUrl, headers).subscribe(y -> System.out.println(y.toString()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -93,7 +93,7 @@ public class TaskServiceImpl implements ITaskService {
     }
 
 
-    public List<TaskModel> requestExpires() {
+    public List<TaskModel> requestExpires() throws JsonProcessingException, InterruptedException {
 
         List result = (List) storeService.find(fooResourceUrl, fooResourceUrl, List.class);
 
@@ -117,9 +117,26 @@ public class TaskServiceImpl implements ITaskService {
         return lista;
     }
 
-  /*  public List<TaskModel> requestReactiveExpires() throws JsonProcessingException, InterruptedException {
+    public List<TaskModel> requestReactiveExpires() throws JsonProcessingException, InterruptedException {
+        List result = (List) storeService.findReactive(fooResourceUrl, fooResourceUrl, List.class).block();
 
-    }*/
+        if (result != null && !result.isEmpty()) {
+            List<TaskModel> lista = (List<TaskModel>) result;
+            return lista;
+        }
+
+
+        ResponseEntity<List> response = makeRequest();
+        HttpHeaders headers = response.getHeaders();
+        String etag = headers.getETag();
+
+
+        List<TaskModel> lista = (List<TaskModel>) response.getBody();
+        if (lista != null && !lista.isEmpty()) {
+            storeService.addReactive(lista, fooResourceUrl, headers).block();
+        }
+        return lista;
+    }
 
     public List<TaskModel> requestExpiresWithParams(int expires) throws JsonProcessingException, InterruptedException {
 

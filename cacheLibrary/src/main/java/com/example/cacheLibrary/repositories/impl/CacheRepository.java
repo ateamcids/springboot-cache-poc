@@ -13,6 +13,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
 import java.util.TimeZone;
@@ -41,9 +43,6 @@ public class CacheRepository<T> implements ICacheRepository<T> {
         String jsonObject = OBJECT_MAPPER.writeValueAsString(object);
         template.opsForHash().put(collection, hkey, jsonObject);
     }
-
-    // implement methods
-
 
     public boolean add(String collection, String hkey, T object, int timeout, TimeUnit unit) {
         try {
@@ -84,10 +83,18 @@ public class CacheRepository<T> implements ICacheRepository<T> {
             return reactiveTemplate.opsForHash().put(collection, hkey, jsonObject);
         } catch (Exception e) {
             throw e;
-            // return false;
         }
     }
 
+    public Mono<Boolean> addReactive(String collection, String hkey, T object, int timeout, TimeUnit unit) throws JsonProcessingException {
+        try {
+            String jsonObject = OBJECT_MAPPER.writeValueAsString(object);
+            reactiveTemplate.opsForHash().put(collection, hkey, jsonObject).block();
+            return reactiveTemplate.expire(collection, Duration.ofSeconds(timeout));
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 
     public Mono<T> findReactive(String collection, String hkey, Class<T> tClass) {
 
@@ -105,7 +112,6 @@ public class CacheRepository<T> implements ICacheRepository<T> {
             });
         } catch (Exception e) {
             throw e;
-            // return false;
         }
     }
 
