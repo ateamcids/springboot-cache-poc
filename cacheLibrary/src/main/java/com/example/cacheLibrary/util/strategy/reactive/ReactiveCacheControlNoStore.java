@@ -8,7 +8,8 @@ import org.springframework.http.HttpStatus;
 
 public class ReactiveCacheControlNoStore implements IStrategy {
 
-    public CacheControlStrategyResponse cacheControlStrategy(CacheModel cacheModel, ICacheRepository cacheRepository) {
-        return new CacheControlStrategyResponse(false,null, HttpStatus.OK);
-    }
+  public CacheControlStrategyResponse cacheControlStrategy(
+      CacheModel cacheModel, ICacheRepository cacheRepository) {
+    return new CacheControlStrategyResponse(false, null, HttpStatus.OK);
+  }
 }
