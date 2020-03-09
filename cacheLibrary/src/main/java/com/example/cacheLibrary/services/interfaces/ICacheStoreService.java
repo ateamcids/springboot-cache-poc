@@ -1,18 +1,16 @@
 package com.example.cacheLibrary.services.interfaces;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.example.cacheLibrary.model.CacheResponseStatus;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import org.springframework.http.HttpHeaders;
 import reactor.core.publisher.Mono;
 
-import java.time.Duration;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
-
 public interface ICacheStoreService<T> {
-  T find(String collection, String hkey, Class<T> tClass);
+  T find(String collection, String hkey, Class<T> tclass);
 
-  T find(String collection, Class<T> tClass);
+  T find(String collection, Class<T> tclass);
 
   public String first(String collection);
 
@@ -25,7 +23,7 @@ public interface ICacheStoreService<T> {
   CacheResponseStatus add(T object, String requestUrl, HttpHeaders headers)
       throws JsonProcessingException, InterruptedException;
 
-  Mono<T> findReactive(String collection, String hkey, Class<T> tClass);
+  Mono<T> findReactive(String collection, String hkey, Class<T> tclass);
 
   Mono<CacheResponseStatus> addReactive(T object, String requestUrl, HttpHeaders headers)
       throws JsonProcessingException, InterruptedException;

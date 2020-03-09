@@ -1,10 +1,9 @@
 package com.example.cacheLibrary.util.strategy;
 
-import com.example.cacheLibrary.util.strategy.reactive.ReactiveCacheControlMaxAge;
-import org.springframework.stereotype.Component;
-
+import com.example.cacheLibrary.util.strategy.reactive.*;
 import java.util.EnumMap;
 import java.util.Map;
+import org.springframework.stereotype.Component;
 
 @Component
 public class StrategyFactory {

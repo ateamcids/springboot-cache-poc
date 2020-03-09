@@ -1,8 +1,7 @@
 package com.example.cacheLibrary.services.impl;
 
-import com.example.cacheLibrary.model.CacheResStatusDescripcionEnum;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.example.cacheLibrary.model.CacheModel;
+import com.example.cacheLibrary.model.CacheResStatusDescripcionEnum;
 import com.example.cacheLibrary.model.CacheResponseStatus;
 import com.example.cacheLibrary.repositories.interfaces.ICacheRepository;
 import com.example.cacheLibrary.services.interfaces.ICacheStoreService;
@@ -10,13 +9,14 @@ import com.example.cacheLibrary.util.strategy.CacheControlEnum;
 import com.example.cacheLibrary.util.strategy.CacheControlStrategyResponse;
 import com.example.cacheLibrary.util.strategy.IStrategy;
 import com.example.cacheLibrary.util.strategy.StrategyFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 @Service
 class CacheStoreService<T> implements ICacheStoreService<T> {
@@ -46,7 +46,9 @@ class CacheStoreService<T> implements ICacheStoreService<T> {
   public CacheResponseStatus add(T object, String requestUrl, HttpHeaders headers)
       throws JsonProcessingException, InterruptedException {
     String hkey = headers.getETag();
-    if (hkey == null) hkey = requestUrl;
+    if (hkey == null) {
+      hkey = requestUrl;
+    }
 
     String descripcion = CacheResStatusDescripcionEnum.APLICOESTRATEGIA.getDescripcion();
 
@@ -94,7 +96,9 @@ class CacheStoreService<T> implements ICacheStoreService<T> {
   public Mono<CacheResponseStatus> addReactive(T object, String requestUrl, HttpHeaders headers)
       throws JsonProcessingException, InterruptedException {
     String hkey = headers.getETag();
-    if (hkey == null) hkey = requestUrl;
+    if (hkey == null) {
+      hkey = requestUrl;
+    }
     String descripcion = CacheResStatusDescripcionEnum.APLICOESTRATEGIA.getDescripcion();
     /** ETag desarrollado abajo */
     if (cacheRepository.any(requestUrl)) {
@@ -141,7 +145,9 @@ class CacheStoreService<T> implements ICacheStoreService<T> {
       throws JsonProcessingException, InterruptedException {
 
     String hkey = headers.getETag();
-    if (hkey == null) hkey = requestUrl;
+    if (hkey == null) {
+      hkey = requestUrl;
+    }
     return cacheRepository.addReactive(requestUrl, hkey, object);
   }
 
@@ -156,23 +162,25 @@ class CacheStoreService<T> implements ICacheStoreService<T> {
       T object, String requestUrl, HttpHeaders headers, int timeOut, TimeUnit unit)
       throws JsonProcessingException, InterruptedException {
     String hkey = headers.getETag();
-    if (hkey == null) hkey = requestUrl;
+    if (hkey == null) {
+      hkey = requestUrl;
+    }
     return cacheRepository.addReactive(requestUrl, hkey, object, timeOut, unit);
   }
 
-  public T find(String collection, String hkey, Class<T> tClass) {
-    return cacheRepository.find(collection, hkey, tClass);
+  public T find(String collection, String hkey, Class<T> tclass) {
+    return cacheRepository.find(collection, hkey, tclass);
   }
 
-  public T find(String collection, Class<T> tClass) {
-    return cacheRepository.find(collection, tClass);
+  public T find(String collection, Class<T> tclass) {
+    return cacheRepository.find(collection, tclass);
   }
 
   public String first(String collection) {
     return cacheRepository.first(collection);
   }
 
-  public Mono<T> findReactive(String collection, String hkey, Class<T> tClass) {
-    return cacheRepository.findReactive(collection, hkey, tClass);
+  public Mono<T> findReactive(String collection, String hkey, Class<T> tclass) {
+    return cacheRepository.findReactive(collection, hkey, tclass);
   }
 }
