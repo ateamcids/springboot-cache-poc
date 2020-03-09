@@ -8,20 +8,14 @@ import java.util.concurrent.TimeUnit;
 
 public class CacheControlMaxAge implements IStrategy {
 
-  public CacheControlStrategyResponse cacheControlStrategy(
-      CacheModel cacheModel, ICacheRepository cacheRepository) {
-    String[] maxage = cacheModel.getHeader().split("=");
+    public CacheControlStrategyResponse cacheControlStrategy(CacheModel cacheModel, ICacheRepository cacheRepository) {
 
-    boolean cached =
-        cacheRepository.add(
-            cacheModel.getCollection(),
-            cacheModel.getHkey(),
-            cacheModel.getObject(),
-            Integer.parseInt(maxage[1]),
-            TimeUnit.SECONDS);
+        String[] maxage = cacheModel.header.split("=");
 
-    // TODO agregar header con cache control max age HttpHeaders headers
+        boolean cached = cacheRepository.add(cacheModel.collection, cacheModel.hkey, cacheModel.object, Integer.parseInt(maxage[1]) , TimeUnit.SECONDS);
 
-    return new CacheControlStrategyResponse(cached, Integer.parseInt(maxage[1]), HttpStatus.OK);
-  }
+        //TODO agregar header con cache control max age HttpHeaders headers
+
+        return new CacheControlStrategyResponse(cached,Integer.parseInt(maxage[1]), HttpStatus.OK);
+    }
 }
