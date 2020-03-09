@@ -13,36 +13,37 @@ import java.util.concurrent.TimeUnit;
 @Repository
 public interface ICacheRepository<T> {
 
-    boolean add(String collection, String hkey, T object);
+  boolean add(String collection, String hkey, T object);
 
-    boolean add(String collection, String hkey, T object, int timeout, TimeUnit unit);
+  boolean add(String collection, String hkey, T object, int timeout, TimeUnit unit);
 
-    boolean add(String collection, String hkey, T object, Date date);
+  boolean add(String collection, String hkey, T object, Date date);
 
-    Mono<Boolean> addReactive(String collection, String hkey, T object) throws JsonProcessingException, InterruptedException;
+  Mono<Boolean> addReactive(String collection, String hkey, T object)
+      throws JsonProcessingException, InterruptedException;
 
-    Mono<Boolean> addReactive(String collection, String hkey, T object, int timeout, TimeUnit unit) throws JsonProcessingException, InterruptedException;
+  Mono<Boolean> addReactive(String collection, String hkey, T object, int timeout, TimeUnit unit)
+      throws JsonProcessingException, InterruptedException;
 
-    Mono<T> findReactive(String collection, String hkey, Class<T> tClass);
+  Mono<T> findReactive(String collection, String hkey, Class<T> tClass);
 
-    boolean delete(String collection);
+  boolean delete(String collection);
 
-    boolean deleteReactive(String collection);
+  boolean deleteReactive(String collection);
 
-    boolean delete(String collection, String hkey);
+  boolean delete(String collection, String hkey);
 
-    T find(String collection, String hkey, Class<T> tClass);
+  T find(String collection, String hkey, Class<T> tClass);
 
-    T find(String collection, Class<T> tClass);
+  T find(String collection, Class<T> tClass);
 
-    Boolean isAvailable();
+  Boolean isAvailable();
 
-    boolean any(String collection);
+  boolean any(String collection);
 
-    boolean hasKey(String collection, String hkey);
+  boolean hasKey(String collection, String hkey);
 
-    Map completeCollection(String collection);
+  Map completeCollection(String collection);
 
-    public String first(String collection);
-
+  public String first(String collection);
 }

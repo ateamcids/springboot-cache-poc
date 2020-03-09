@@ -3,41 +3,37 @@ package com.example.cacheLibrary.util.strategy;
 import org.springframework.http.HttpStatus;
 
 public class CacheControlStrategyResponse {
-    private boolean caching;
-    private Integer maxAge;
-    private HttpStatus status;
+  private boolean caching;
+  private Integer maxAge;
+  private HttpStatus status;
 
+  public CacheControlStrategyResponse(boolean caching, Integer maxAge, HttpStatus status) {
+    this.caching = caching;
+    this.maxAge = maxAge;
+    this.status = status;
+  }
 
+  public boolean isCaching() {
+    return caching;
+  }
 
-    public CacheControlStrategyResponse(boolean caching, Integer maxAge, HttpStatus status) {
-        this.caching = caching;
-        this.maxAge = maxAge;
-        this.status = status;
-    }
+  public void setCaching(boolean caching) {
+    this.caching = caching;
+  }
 
-    public boolean isCaching() {
-        return caching;
-    }
+  public Integer getMaxAge() {
+    return maxAge;
+  }
 
-    public void setCaching(boolean caching) {
-        this.caching = caching;
-    }
+  public void setMaxAge(Integer maxAge) {
+    this.maxAge = maxAge;
+  }
 
-    public Integer getMaxAge() {
-        return maxAge;
-    }
+  public HttpStatus getStatus() {
+    return status;
+  }
 
-    public void setMaxAge(Integer maxAge) {
-        this.maxAge = maxAge;
-    }
-
-
-    public HttpStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(HttpStatus status) {
-        this.status = status;
-    }
-
+  public void setStatus(HttpStatus status) {
+    this.status = status;
+  }
 }
