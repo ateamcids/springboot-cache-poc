@@ -3,18 +3,13 @@ package com.example.cacheLibrary.repositories.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.example.cacheLibrary.repositories.interfaces.ICacheRepository;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
 import java.util.TimeZone;
@@ -34,7 +29,7 @@ public class CacheRepository<T> implements ICacheRepository<T> {
         OBJECT_MAPPER.setTimeZone(DEFAULT_TIMEZONE);
     }
 
-    public CacheRepository(    @Qualifier("reactiveStringRedisTemplate") ReactiveRedisTemplate reactiveTemplate,@Qualifier("stringRedisTemplate")  RedisTemplate template) {
+    public CacheRepository(@Qualifier("reactiveStringRedisTemplate") ReactiveRedisTemplate reactiveTemplate, @Qualifier("stringRedisTemplate") RedisTemplate template) {
         this.reactiveTemplate = reactiveTemplate;
         this.template = template;
     }
@@ -92,7 +87,7 @@ public class CacheRepository<T> implements ICacheRepository<T> {
             reactiveTemplate.opsForHash().put(collection, hkey, jsonObject).block();
             return reactiveTemplate.expire(collection, Duration.ofSeconds(timeout));
         } catch (Exception e) {
-            throw e;
+            return Mono.just(false);
         }
     }
 
@@ -150,10 +145,7 @@ public class CacheRepository<T> implements ICacheRepository<T> {
             String jsonObj = String.valueOf(template.opsForHash().get(collection, hkey));
             return OBJECT_MAPPER.readValue(jsonObj, tClass);
         } catch (Exception e) {
-            if (e.getMessage() == null) {
-            } else {
-            }
-            return null;
+           return null;
         }
     }
 
@@ -171,11 +163,7 @@ public class CacheRepository<T> implements ICacheRepository<T> {
         try {
             String jsonObj = String.valueOf(template.opsForHash().entries(collection));
             return (T) jsonObj;
-           //return OBJECT_MAPPER.readValue(jsonObj, tClass);
         } catch (Exception e) {
-            if (e.getMessage() == null) {
-            } else {
-            }
             return null;
         }
     }

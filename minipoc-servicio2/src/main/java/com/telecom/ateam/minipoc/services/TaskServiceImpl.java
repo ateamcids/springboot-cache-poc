@@ -44,7 +44,7 @@ public class TaskServiceImpl implements ITaskService {
         List<TaskModel> lista = (List<TaskModel>) response.getBody();
         CacheResponseStatus a = null;
         if (lista != null && !lista.isEmpty()) {
-            a = storeService.add(lista, fooResourceUrl, headers);
+            storeService.add(lista, fooResourceUrl, headers);
         }
 
         if (response.getStatusCode() == HttpStatus.NOT_MODIFIED) {
@@ -79,7 +79,6 @@ public class TaskServiceImpl implements ITaskService {
     public Mono<List<TaskModel>> requestReactivePut() {
         ResponseEntity<List> response = makeRequest();
         HttpHeaders headers = response.getHeaders();
-        String etag = headers.getETag();
         List<TaskModel> lista;
         lista = (List<TaskModel>) response.getBody();
         if (lista != null && !lista.isEmpty()) {

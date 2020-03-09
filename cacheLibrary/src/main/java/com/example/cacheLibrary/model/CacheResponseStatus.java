@@ -3,6 +3,18 @@ package com.example.cacheLibrary.model;
 import org.springframework.http.HttpStatus;
 
 public class CacheResponseStatus {
+
+    private String descripcion;
+    private HttpStatus status;
+    private boolean isCaching;
+
+
+    public CacheResponseStatus(String descripcion, HttpStatus status, boolean isCaching) {
+        this.descripcion = descripcion;
+        this.status = status;
+        this.isCaching = isCaching;
+    }
+
     public String getDescripcion() {
         return descripcion;
     }
@@ -19,20 +31,8 @@ public class CacheResponseStatus {
         this.status = status;
     }
 
+    public boolean isCaching() { return isCaching; }
 
-
-    private String descripcion;
-    private HttpStatus status;
-    private boolean isCaching;
-
-
-    public CacheResponseStatus(String descripcion, HttpStatus status, boolean isCaching) {
-        this.descripcion = descripcion;
-        this.status = status;
-        this.isCaching = isCaching;
-    }
-
-
-
+    public void setCaching(boolean caching) { isCaching = caching; }
 
 }
