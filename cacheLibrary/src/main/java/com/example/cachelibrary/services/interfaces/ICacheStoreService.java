@@ -1,6 +1,6 @@
-package com.example.cacheLibrary.services.interfaces;
+package com.example.cachelibrary.services.interfaces;
 
-import com.example.cacheLibrary.model.CacheResponseStatus;
+import com.example.cachelibrary.model.CacheResponseStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;

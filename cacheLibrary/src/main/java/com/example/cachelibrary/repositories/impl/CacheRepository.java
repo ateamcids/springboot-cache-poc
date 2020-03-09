@@ -1,6 +1,6 @@
-package com.example.cacheLibrary.repositories.impl;
+package com.example.cachelibrary.repositories.impl;
 
-import com.example.cacheLibrary.repositories.interfaces.ICacheRepository;
+import com.example.cachelibrary.repositories.interfaces.ICacheRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Duration;

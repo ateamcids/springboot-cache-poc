@@ -1,7 +1,7 @@
-package com.example.cacheLibrary.util.strategy;
+package com.example.cachelibrary.util.strategy;
 
-import com.example.cacheLibrary.model.CacheModel;
-import com.example.cacheLibrary.repositories.interfaces.ICacheRepository;
+import com.example.cachelibrary.model.CacheModel;
+import com.example.cachelibrary.repositories.interfaces.ICacheRepository;
 import org.springframework.http.HttpStatus;
 
 public class CacheControlNoStore implements IStrategy {

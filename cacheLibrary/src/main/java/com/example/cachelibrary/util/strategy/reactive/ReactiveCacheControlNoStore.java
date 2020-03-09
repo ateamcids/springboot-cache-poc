@@ -1,9 +1,9 @@
-package com.example.cacheLibrary.util.strategy.reactive;
+package com.example.cachelibrary.util.strategy.reactive;
 
-import com.example.cacheLibrary.model.CacheModel;
-import com.example.cacheLibrary.repositories.interfaces.ICacheRepository;
-import com.example.cacheLibrary.util.strategy.CacheControlStrategyResponse;
-import com.example.cacheLibrary.util.strategy.IStrategy;
+import com.example.cachelibrary.model.CacheModel;
+import com.example.cachelibrary.repositories.interfaces.ICacheRepository;
+import com.example.cachelibrary.util.strategy.CacheControlStrategyResponse;
+import com.example.cachelibrary.util.strategy.IStrategy;
 import org.springframework.http.HttpStatus;
 
 public class ReactiveCacheControlNoStore implements IStrategy {
