@@ -1,6 +1,5 @@
 package com.example.cacheLibrary.util.strategy;
 
-//import org.omg.CORBA.UNKNOWN;
 
 import java.util.regex.Pattern;
 
@@ -32,14 +31,11 @@ public enum CacheControlEnum {
 
     public static CacheControlEnum getByCode(String cacheControlCode) {
         for (CacheControlEnum e : values()) {
-            if (e.cacheControlCode != null) {
-                if (e.cacheControlCode.equals(cacheControlCode))
+            if (e.cacheControlCode != null && e.cacheControlCode.equals(cacheControlCode)) {
                     return e;
             }
-            if (e.maxagePattern != null) {
-                if (e.maxagePattern.matcher(cacheControlCode).find()) {
+            if (e.maxagePattern != null && e.maxagePattern.matcher(cacheControlCode).find()) {
                     return e;
-                }
             }
         }
         return UNKNOWN;
