@@ -42,7 +42,6 @@ public class TaskController {
 
   @GetMapping("/reactivePut")
   public Mono<List<TaskModel>> saveReactivePut() {
-    // taskService.requestReactivePut().subscribe( (x) -> x  );
     return taskService.requestReactivePut();
   }
 

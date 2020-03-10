@@ -1,6 +1,5 @@
 package com.telecom.ateam.minipoc.services;
 
-import com.example.cachelibrary.model.CacheResponseStatus;
 import com.example.cachelibrary.services.interfaces.ICacheStoreService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,6 +7,8 @@ import com.telecom.ateam.minipoc.models.TaskModel;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -19,7 +20,7 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class TaskServiceImpl implements ITaskService {
-
+  private static final Logger LOGGER = Logger.getLogger(TaskServiceImpl.class.getName());
   private static final ObjectMapper OBJECT_MAPPER;
   private static final TimeZone DEFAULT_TIMEZONE = TimeZone.getTimeZone("UTC");
 
@@ -38,39 +39,48 @@ public class TaskServiceImpl implements ITaskService {
   }
 
   public List<TaskModel> request() throws JsonProcessingException, InterruptedException {
-
+    List<TaskModel> lista = null;
     ResponseEntity<List> response = makeRequestSendParams();
-    HttpHeaders headers = response.getHeaders();
-    String etag = headers.getETag();
-    List<TaskModel> lista = (List<TaskModel>) response.getBody();
-    if (lista != null && !lista.isEmpty()) {
-      storeService.add(lista, fooResourceUrl, headers);
-    }
+    if (response != null) {
+      HttpHeaders headers = response.getHeaders();
+      if (!headers.isEmpty()) {
+        String etag = headers.getETag();
+        lista = response.getBody();
+        if (lista != null && !lista.isEmpty()) {
+          storeService.add(lista, fooResourceUrl, headers);
+        }
 
-    if (response.getStatusCode() == HttpStatus.NOT_MODIFIED) {
-      // todo recomendado enviar un 304
-      lista = (List) storeService.find(fooResourceUrl, etag, List.class);
+        if (response.getStatusCode() == HttpStatus.NOT_MODIFIED) {
+          // todo recomendado enviar un 304
+          lista = (List) storeService.find(fooResourceUrl, etag, List.class);
+        }
+      }
     }
-
     return lista;
   }
 
   public List<TaskModel> requestReactive() throws JsonProcessingException, InterruptedException {
-
+    String etag = "";
+    HttpHeaders headers = null;
+    List<TaskModel> lista = null;
     ResponseEntity<List> response = makeRequestSendParams();
-    HttpHeaders headers = response.getHeaders();
-    String etag = headers.getETag();
 
-    List<TaskModel> lista = response.getBody();
+    if (response != null) {
+      headers = response.getHeaders();
+      if (!headers.isEmpty()) {
+        etag = headers.getETag();
+      }
+      lista = response.getBody();
 
-    if (lista != null && !lista.isEmpty()) {
-      storeService.addReactiveCollection(lista, fooResourceUrl, headers).block();
+      if (lista != null && !lista.isEmpty()) {
+        storeService.addReactiveCollection(lista, fooResourceUrl, headers).block();
+      }
+
+      if (response.getStatusCode() == HttpStatus.NOT_MODIFIED) {
+        lista =
+            (List<TaskModel>) storeService.findReactive(fooResourceUrl, etag, List.class).block();
+      }
     }
-
-    if (response.getStatusCode() == HttpStatus.NOT_MODIFIED) {
-      lista = (List<TaskModel>) storeService.findReactive(fooResourceUrl, etag, List.class).block();
-    }
-
     return lista;
   }
 
@@ -78,14 +88,12 @@ public class TaskServiceImpl implements ITaskService {
     ResponseEntity<List> response = makeRequest();
     HttpHeaders headers = response.getHeaders();
     List<TaskModel> lista;
-    lista = (List<TaskModel>) response.getBody();
+    lista = response.getBody();
     if (lista != null && !lista.isEmpty()) {
       try {
-        storeService
-            .addReactiveCollection(lista, fooResourceUrl, headers)
-            .subscribe(y -> System.out.println(y.toString()));
+        storeService.addReactiveCollection(lista, fooResourceUrl, headers).subscribe();
       } catch (Exception e) {
-        e.printStackTrace();
+        LOGGER.log(Level.SEVERE, e.toString(), e);
       }
     }
     return Mono.just(lista);
@@ -96,15 +104,14 @@ public class TaskServiceImpl implements ITaskService {
     List result = (List) storeService.find(fooResourceUrl, fooResourceUrl, List.class);
 
     if (result != null && !result.isEmpty()) {
-      List<TaskModel> lista = (List<TaskModel>) result;
+      List<TaskModel> lista = result;
       return lista;
     }
 
     ResponseEntity<List> response = makeRequest();
     HttpHeaders headers = response.getHeaders();
-    String etag = headers.getETag();
 
-    List<TaskModel> lista = (List<TaskModel>) response.getBody();
+    List<TaskModel> lista = response.getBody();
     if (lista != null && !lista.isEmpty()) {
       storeService.add(lista, fooResourceUrl, headers);
     }
@@ -117,16 +124,15 @@ public class TaskServiceImpl implements ITaskService {
     List result =
         (List) storeService.findReactive(fooResourceUrl, fooResourceUrl, List.class).block();
 
-    if (result != null && !result.isEmpty()) {
-      List<TaskModel> lista = (List<TaskModel>) result;
+    if (!result.isEmpty()) {
+      List<TaskModel> lista = result;
       return lista;
     }
 
     ResponseEntity<List> response = makeRequest();
     HttpHeaders headers = response.getHeaders();
-    String etag = headers.getETag();
 
-    List<TaskModel> lista = (List<TaskModel>) response.getBody();
+    List<TaskModel> lista = response.getBody();
     if (lista != null && !lista.isEmpty()) {
       storeService.addReactive(lista, fooResourceUrl, headers).block();
     }
@@ -143,11 +149,11 @@ public class TaskServiceImpl implements ITaskService {
     List result = (List) storeService.find(fooResourceUrl, List.class);
 
     if (result != null && !result.isEmpty()) {
-      List<TaskModel> lista = (List<TaskModel>) result;
+      List<TaskModel> lista = result;
       return lista;
     }
 
-    List<TaskModel> lista = (List<TaskModel>) response.getBody();
+    List<TaskModel> lista = response.getBody();
     if (lista != null && !lista.isEmpty()) {
       storeService.addCollection(fooResourceUrl, etag, lista, expires, TimeUnit.SECONDS);
     }
@@ -162,10 +168,10 @@ public class TaskServiceImpl implements ITaskService {
     List result = (List) storeService.find(collection, hkey, List.class);
 
     if (result != null && !result.isEmpty()) {
-      List<TaskModel> lista = (List<TaskModel>) result;
+      List<TaskModel> lista = result;
       return lista;
     }
-    List<TaskModel> lista = (List<TaskModel>) response.getBody();
+    List<TaskModel> lista = response.getBody();
     if (lista != null && !lista.isEmpty()) {
       storeService.addCollection(collection, hkey, lista);
     }
@@ -194,7 +200,7 @@ public class TaskServiceImpl implements ITaskService {
       }
 
     } catch (Exception e) {
-      e.printStackTrace();
+      LOGGER.log(Level.SEVERE, e.toString(), e);
     }
 
     return response;

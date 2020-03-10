@@ -5,6 +5,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.telecom.ateam.minipoc.models.DashboardModel;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import reactor.core.publisher.Mono;
 @Service
 public class DashboardServiceImpl implements IDashboardService {
 
+  private static final Logger LOGGER = Logger.getLogger(DashboardServiceImpl.class.getName());
   static String fooResourceUrl = "http://200.61.215.10:8090/dashboard";
 
   @Autowired ICacheStoreService storeService;
@@ -58,16 +61,13 @@ public class DashboardServiceImpl implements IDashboardService {
   public Mono<List<DashboardModel>> requestReactivePut() {
     ResponseEntity<List> response = makeRequest();
     HttpHeaders headers = response.getHeaders();
-    String etag = headers.getETag();
     List<DashboardModel> lista;
     lista = (List<DashboardModel>) response.getBody();
     if (lista != null && !lista.isEmpty()) {
       try {
-        storeService
-            .addReactive(lista, fooResourceUrl, headers)
-            .subscribe(y -> System.out.println(y.toString()));
+        storeService.addReactive(lista, fooResourceUrl, headers).subscribe();
       } catch (Exception e) {
-        e.printStackTrace();
+        LOGGER.log(Level.SEVERE, e.toString(), e);
       }
     }
     return Mono.just(lista);
