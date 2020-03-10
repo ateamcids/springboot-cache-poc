@@ -1,4 +1,4 @@
-package com.example.cacheLibrary.repositories.interfaces;
+package com.example.cachelibrary.repositories.interfaces;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.Date;

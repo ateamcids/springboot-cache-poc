@@ -1,4 +1,4 @@
-package com.example.cacheLibrary.model;
+package com.example.cachelibrary.model;
 
 public enum CacheResStatusDescripcionEnum {
   APLICOESTRATEGIA("Se aplicó estrategia"),

@@ -1,14 +1,14 @@
-package com.example.cacheLibrary.services.impl;
+package com.example.cachelibrary.services.impl;
 
-import com.example.cacheLibrary.model.CacheModel;
-import com.example.cacheLibrary.model.CacheResStatusDescripcionEnum;
-import com.example.cacheLibrary.model.CacheResponseStatus;
-import com.example.cacheLibrary.repositories.interfaces.ICacheRepository;
-import com.example.cacheLibrary.services.interfaces.ICacheStoreService;
-import com.example.cacheLibrary.util.strategy.CacheControlEnum;
-import com.example.cacheLibrary.util.strategy.CacheControlStrategyResponse;
-import com.example.cacheLibrary.util.strategy.IStrategy;
-import com.example.cacheLibrary.util.strategy.StrategyFactory;
+import com.example.cachelibrary.model.CacheModel;
+import com.example.cachelibrary.model.CacheResStatusDescripcionEnum;
+import com.example.cachelibrary.model.CacheResponseStatus;
+import com.example.cachelibrary.repositories.interfaces.ICacheRepository;
+import com.example.cachelibrary.services.interfaces.ICacheStoreService;
+import com.example.cachelibrary.util.strategy.CacheControlEnum;
+import com.example.cachelibrary.util.strategy.CacheControlStrategyResponse;
+import com.example.cachelibrary.util.strategy.IStrategy;
+import com.example.cachelibrary.util.strategy.StrategyFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.Arrays;
 import java.util.Date;

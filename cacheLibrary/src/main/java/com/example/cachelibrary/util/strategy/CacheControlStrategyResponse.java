@@ -1,4 +1,4 @@
-package com.example.cacheLibrary.util.strategy;
+package com.example.cachelibrary.util.strategy;
 
 import org.springframework.http.HttpStatus;
 

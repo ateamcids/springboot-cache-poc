@@ -1,6 +1,6 @@
-package com.example.cacheLibrary.util.strategy;
+package com.example.cachelibrary.util.strategy;
 
-import com.example.cacheLibrary.util.strategy.reactive.*;
+import com.example.cachelibrary.util.strategy.reactive.*;
 import java.util.EnumMap;
 import java.util.Map;
 import org.springframework.stereotype.Component;

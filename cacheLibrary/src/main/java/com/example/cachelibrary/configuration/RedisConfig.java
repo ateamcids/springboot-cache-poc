@@ -1,4 +1,4 @@
-package com.example.cacheLibrary.configuration;
+package com.example.cachelibrary.configuration;
 
 import io.lettuce.core.ClientOptions;
 import io.lettuce.core.resource.ClientResources;
