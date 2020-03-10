@@ -4,6 +4,5 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan(basePackages = {"com.example.cacheLibrary"})
-public class Config {
-}
+@ComponentScan(basePackages = {"com.example.cachelibrary"})
+public class Config {}
