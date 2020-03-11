@@ -1,8 +1,8 @@
-package com.example.cachelibrary.util.strategy;
+package com.example.cachelibrary.util.strategy.reactive;
 
 import java.util.regex.Pattern;
 
-public enum CacheControlEnum {
+public enum ReactiveCacheControlEnum {
   MUSTREVALIDATE("must-revalidate"),
   NOCACHE("no-cache"),
   NOSTORE("no-store"),
@@ -17,18 +17,18 @@ public enum CacheControlEnum {
   private final String cacheControlCode;
   private final Pattern maxagePattern;
 
-  private CacheControlEnum(Pattern cacheControlCode) {
+  private ReactiveCacheControlEnum(Pattern cacheControlCode) {
     this.maxagePattern = cacheControlCode;
     this.cacheControlCode = null;
   }
 
-  private CacheControlEnum(String cacheControlCode) {
+  private ReactiveCacheControlEnum(String cacheControlCode) {
     this.cacheControlCode = cacheControlCode;
     this.maxagePattern = null;
   }
 
-  public static CacheControlEnum getByCode(String cacheControlCode) {
-    for (CacheControlEnum e : values()) {
+  public static ReactiveCacheControlEnum getByCode(String cacheControlCode) {
+    for (ReactiveCacheControlEnum e : values()) {
       if (e.cacheControlCode != null && e.cacheControlCode.equals(cacheControlCode)) {
         return e;
       }

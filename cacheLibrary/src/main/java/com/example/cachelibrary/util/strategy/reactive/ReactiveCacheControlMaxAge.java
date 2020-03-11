@@ -2,14 +2,13 @@ package com.example.cachelibrary.util.strategy.reactive;
 
 import com.example.cachelibrary.model.CacheModel;
 import com.example.cachelibrary.repositories.interfaces.ICacheRepository;
-import com.example.cachelibrary.util.strategy.CacheControlStrategyResponse;
-import com.example.cachelibrary.util.strategy.IStrategy;
+import com.example.cachelibrary.util.strategy.model.CacheControlStrategyResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.concurrent.TimeUnit;
 import org.springframework.http.HttpStatus;
 import reactor.core.publisher.Mono;
 
-public class ReactiveCacheControlMaxAge implements IStrategy {
+public class ReactiveCacheControlMaxAge implements IReactiveStrategy {
 
   public CacheControlStrategyResponse cacheControlStrategy(
       CacheModel cacheModel, ICacheRepository cacheRepository)
