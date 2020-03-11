@@ -5,10 +5,12 @@ import com.example.cachelibrary.model.CacheResStatusDescripcionEnum;
 import com.example.cachelibrary.model.CacheResponseStatus;
 import com.example.cachelibrary.repositories.interfaces.ICacheRepository;
 import com.example.cachelibrary.services.interfaces.ICacheStoreService;
-import com.example.cachelibrary.util.strategy.CacheControlEnum;
-import com.example.cachelibrary.util.strategy.CacheControlStrategyResponse;
-import com.example.cachelibrary.util.strategy.IStrategy;
-import com.example.cachelibrary.util.strategy.StrategyFactory;
+import com.example.cachelibrary.util.strategy.reactive.IReactiveStrategy;
+import com.example.cachelibrary.util.strategy.reactive.ReactiveStrategyFactory;
+import com.example.cachelibrary.util.strategy.sync.CacheControlEnum;
+import com.example.cachelibrary.util.strategy.model.CacheControlStrategyResponse;
+import com.example.cachelibrary.util.strategy.sync.IStrategy;
+import com.example.cachelibrary.util.strategy.sync.StrategyFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.Arrays;
 import java.util.Date;
@@ -24,10 +26,12 @@ class CacheStoreService<T> implements ICacheStoreService<T> {
   private final ICacheRepository<T> cacheRepository;
 
   private final StrategyFactory strategyFactory;
+  private final ReactiveStrategyFactory reactiveStrategyFactory;
 
-  public CacheStoreService(ICacheRepository<T> cacheRepository, StrategyFactory strategyFactory) {
+  public CacheStoreService(ICacheRepository<T> cacheRepository, StrategyFactory strategyFactory, ReactiveStrategyFactory reactiveStrategyFactory) {
     this.cacheRepository = cacheRepository;
     this.strategyFactory = strategyFactory;
+    this.reactiveStrategyFactory = reactiveStrategyFactory;
   }
 
   public boolean addCollection(String collection, String hkey, T object) {
@@ -116,12 +120,12 @@ class CacheStoreService<T> implements ICacheStoreService<T> {
           Arrays.stream(headers.getCacheControl().split(","))
               .map(String::trim)
               .toArray(String[]::new);
-      IStrategy strategy = null;
+      IReactiveStrategy strategy = null;
 
       // TODO foreach cada cachecontrol
       for (String cacheName : cacheControls) {
 
-        strategy = strategyFactory.getStrategy(CacheControlEnum.getByCode(cacheName));
+        strategy = reactiveStrategyFactory.getStrategy(CacheControlEnum.getByCode(cacheName));
 
         if (strategy != null) {
           CacheControlStrategyResponse res =

@@ -87,8 +87,7 @@ public class TaskServiceImpl implements ITaskService {
   public Mono<List<TaskModel>> requestReactivePut() {
     ResponseEntity<List> response = makeRequest();
     HttpHeaders headers = response.getHeaders();
-    List<TaskModel> lista;
-    lista = response.getBody();
+    List<TaskModel> lista = response.getBody();
     if (lista != null && !lista.isEmpty()) {
       try {
         storeService.addReactiveCollection(lista, fooResourceUrl, headers).subscribe();
@@ -124,7 +123,7 @@ public class TaskServiceImpl implements ITaskService {
     List result =
         (List) storeService.findReactive(fooResourceUrl, fooResourceUrl, List.class).block();
 
-    if (!result.isEmpty()) {
+    if (comparar(result)) {
       List<TaskModel> lista = result;
       return lista;
     }
@@ -137,6 +136,13 @@ public class TaskServiceImpl implements ITaskService {
       storeService.addReactive(lista, fooResourceUrl, headers).block();
     }
     return lista;
+  }
+
+  boolean comparar(Object com) {
+    if (com != null) {
+      return true;
+    }
+    return false;
   }
 
   public List<TaskModel> requestExpiresWithParams(int expires)
