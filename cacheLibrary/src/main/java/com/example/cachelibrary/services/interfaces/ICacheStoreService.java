@@ -31,6 +31,6 @@ public interface ICacheStoreService<T> {
   Mono<Boolean> addReactiveCollection(T object, String requestUrl, HttpHeaders headers)
       throws JsonProcessingException, InterruptedException;
 
-  Mono<Boolean> addReactiveCollection(T object, String requestUrl, int timeOut, TimeUnit unit)
+  Mono<Boolean> addReactiveCollection(T object, String requestUrl, HttpHeaders headers,int timeOut)
       throws JsonProcessingException, InterruptedException;
 }

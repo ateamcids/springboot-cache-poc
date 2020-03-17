@@ -21,8 +21,7 @@ public class ReactiveCacheControlMaxAge implements IReactiveStrategy {
             cacheModel.getCollection(),
             cacheModel.getHkey(),
             cacheModel.getObject(),
-            Integer.parseInt(maxage[1]),
-            TimeUnit.SECONDS);
+            Integer.parseInt(maxage[1]));
 
     // TODO agregar header con cache control max age HttpHeaders headers
 

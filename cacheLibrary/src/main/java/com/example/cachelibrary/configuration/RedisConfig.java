@@ -84,9 +84,7 @@ public class RedisConfig {
   public ReactiveRedisTemplate<Object, Object> reactiveRedisTemplate(
       @Qualifier("reactiveConnectionFactory")
           ReactiveRedisConnectionFactory redisConnectionFactory) {
-    ReactiveRedisTemplate<Object, Object> template =
-        new ReactiveRedisTemplate(redisConnectionFactory, RedisSerializationContext.string());
-    return template;
+        return new ReactiveRedisTemplate(redisConnectionFactory, RedisSerializationContext.string());
   }
 
   @Bean
