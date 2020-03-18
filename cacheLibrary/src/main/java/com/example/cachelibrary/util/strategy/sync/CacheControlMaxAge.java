@@ -21,8 +21,6 @@ public class CacheControlMaxAge implements IStrategy {
             Integer.parseInt(maxage[1]),
             TimeUnit.SECONDS);
 
-    // TODO agregar header con cache control max age HttpHeaders headers
-
     return new CacheControlStrategyResponse(cached, Integer.parseInt(maxage[1]), HttpStatus.OK);
   }
 }

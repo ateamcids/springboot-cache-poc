@@ -84,12 +84,13 @@ public class CacheRepository<T> implements ICacheRepository<T> {
             String jsonObject = OBJECT_MAPPER.writeValueAsString(object);
             return reactiveTemplate.opsForHash().put(collection, hkey, jsonObject);
         } catch (Exception e) {
-            throw e;
+            logger.error(e.getMessage(), e);
+            return Mono.just(false);
         }
     }
 
     public Mono<Boolean> addReactive(
-            String collection, String hkey, T object, int timeout, TimeUnit unit)
+            String collection, String hkey, T object, int timeout)
             throws JsonProcessingException {
         try {
             String jsonObject = OBJECT_MAPPER.writeValueAsString(object);

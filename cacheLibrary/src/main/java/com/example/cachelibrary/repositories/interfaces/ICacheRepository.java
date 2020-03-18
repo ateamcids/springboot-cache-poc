@@ -20,7 +20,7 @@ public interface ICacheRepository<T> {
   Mono<Boolean> addReactive(String collection, String hkey, T object)
       throws JsonProcessingException, InterruptedException;
 
-  Mono<Boolean> addReactive(String collection, String hkey, T object, int timeout, TimeUnit unit)
+  Mono<Boolean> addReactive(String collection, String hkey, T object, int timeout)
       throws JsonProcessingException, InterruptedException;
 
   Mono<T> findReactive(String collection, String hkey, Class<T> tclass);

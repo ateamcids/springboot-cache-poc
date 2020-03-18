@@ -62,7 +62,7 @@ class CacheStoreService<T> implements ICacheStoreService<T> {
         descripcion = CacheResStatusDescripcionEnum.NOMODIFICACION.getDescripcion();
         return new CacheResponseStatus(descripcion, HttpStatus.NOT_MODIFIED, true);
       } else {
-        // Todo flushear coleccion de esa requestUrl
+        // flushear coleccion de esa requestUrl
         cacheRepository.delete(requestUrl);
       }
     }
@@ -74,7 +74,7 @@ class CacheStoreService<T> implements ICacheStoreService<T> {
               .toArray(String[]::new);
       IStrategy strategy = null;
 
-      // TODO foreach cada cachecontrol
+      // foreach cada cachecontrol
       for (String cacheName : cacheControls) {
 
         strategy = strategyFactory.getStrategy(CacheControlEnum.getByCode(cacheName));
@@ -110,7 +110,7 @@ class CacheStoreService<T> implements ICacheStoreService<T> {
         descripcion = CacheResStatusDescripcionEnum.NOMODIFICACION.getDescripcion();
         return Mono.just(new CacheResponseStatus(descripcion, HttpStatus.NOT_MODIFIED, true));
       } else {
-        // Todo flushear coleccion de esa requestUrl
+        // flushear coleccion de esa requestUrl
         cacheRepository.delete(requestUrl);
       }
     }
@@ -122,7 +122,7 @@ class CacheStoreService<T> implements ICacheStoreService<T> {
               .toArray(String[]::new);
       IReactiveStrategy strategy = null;
 
-      // TODO foreach cada cachecontrol
+      // foreach cada cachecontrol
       for (String cacheName : cacheControls) {
 
         strategy = reactiveStrategyFactory.getStrategy(CacheControlEnum.getByCode(cacheName));
@@ -155,21 +155,14 @@ class CacheStoreService<T> implements ICacheStoreService<T> {
     return cacheRepository.addReactive(requestUrl, hkey, object);
   }
 
-  @Override
   public Mono<Boolean> addReactiveCollection(
-      T object, String requestUrl, int timeOut, TimeUnit unit)
-      throws JsonProcessingException, InterruptedException {
-    return null;
-  }
-
-  public Mono<Boolean> addReactiveCollection(
-      T object, String requestUrl, HttpHeaders headers, int timeOut, TimeUnit unit)
+      T object, String requestUrl, HttpHeaders headers, int timeOut)
       throws JsonProcessingException, InterruptedException {
     String hkey = headers.getETag();
     if (hkey == null) {
       hkey = requestUrl;
     }
-    return cacheRepository.addReactive(requestUrl, hkey, object, timeOut, unit);
+    return cacheRepository.addReactive(requestUrl, hkey, object, timeOut);
   }
 
   public T find(String collection, String hkey, Class<T> tclass) {
