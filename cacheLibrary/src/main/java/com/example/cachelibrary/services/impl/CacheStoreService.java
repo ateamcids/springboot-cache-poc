@@ -62,7 +62,7 @@ class CacheStoreService<T> implements ICacheStoreService<T> {
         descripcion = CacheResStatusDescripcionEnum.NOMODIFICACION.getDescripcion();
         return new CacheResponseStatus(descripcion, HttpStatus.NOT_MODIFIED, true);
       } else {
-        // Todo flushear coleccion de esa requestUrl
+        // flushear coleccion de esa requestUrl
         cacheRepository.delete(requestUrl);
       }
     }
@@ -74,7 +74,7 @@ class CacheStoreService<T> implements ICacheStoreService<T> {
               .toArray(String[]::new);
       IStrategy strategy = null;
 
-      // TODO foreach cada cachecontrol
+      // foreach cada cachecontrol
       for (String cacheName : cacheControls) {
 
         strategy = strategyFactory.getStrategy(CacheControlEnum.getByCode(cacheName));
@@ -110,7 +110,7 @@ class CacheStoreService<T> implements ICacheStoreService<T> {
         descripcion = CacheResStatusDescripcionEnum.NOMODIFICACION.getDescripcion();
         return Mono.just(new CacheResponseStatus(descripcion, HttpStatus.NOT_MODIFIED, true));
       } else {
-        // Todo flushear coleccion de esa requestUrl
+        // flushear coleccion de esa requestUrl
         cacheRepository.delete(requestUrl);
       }
     }
@@ -122,7 +122,7 @@ class CacheStoreService<T> implements ICacheStoreService<T> {
               .toArray(String[]::new);
       IReactiveStrategy strategy = null;
 
-      // TODO foreach cada cachecontrol
+      // foreach cada cachecontrol
       for (String cacheName : cacheControls) {
 
         strategy = reactiveStrategyFactory.getStrategy(CacheControlEnum.getByCode(cacheName));
