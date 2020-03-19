@@ -1,5 +1,11 @@
 package com.example.cachelibrary.model;
 
+/**
+ * Enum que indica si se aplicó o no se aplicó una modificación para ser utilizado como descripción
+ * del objeto.
+ *
+ * @see CacheResponseStatus
+ */
 public enum CacheResStatusDescripcionEnum {
   APLICOESTRATEGIA("Se aplicó estrategia"),
   NOMODIFICACION("No se ha modificado");
