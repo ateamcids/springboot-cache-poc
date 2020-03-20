@@ -1,15 +1,16 @@
 package com.example.cachelibrary.util.strategy.reactive;
 
 import com.example.cachelibrary.util.strategy.sync.CacheControlEnum;
-import org.springframework.stereotype.Component;
-
 import java.util.EnumMap;
 import java.util.Map;
+import org.springframework.stereotype.Component;
+
 
 @Component
 public class ReactiveStrategyFactory {
 
-  private Map<CacheControlEnum, IReactiveStrategy> strategies = new EnumMap<>(CacheControlEnum.class);
+  private Map<CacheControlEnum, IReactiveStrategy> strategies =
+      new EnumMap<>(CacheControlEnum.class);
 
   public ReactiveStrategyFactory() {
     initStrategies();
@@ -17,6 +18,7 @@ public class ReactiveStrategyFactory {
 
   /**
    * Verificar si existe el cache control y devolver la estragia concreta .
+   *
    * @param cacheControl Nombre del cache control
    * @return interface de la estrategia
    */
@@ -27,9 +29,7 @@ public class ReactiveStrategyFactory {
     return strategies.get(cacheControl);
   }
 
-  /**
-   * Inicializar las estragias concretas
-   */
+  /** Inicializar las estragias concretas . */
   private void initStrategies() {
     strategies.put(CacheControlEnum.NOSTORE, new ReactiveCacheControlNoStore());
     strategies.put(CacheControlEnum.MAXAGE, new ReactiveCacheControlMaxAge());
