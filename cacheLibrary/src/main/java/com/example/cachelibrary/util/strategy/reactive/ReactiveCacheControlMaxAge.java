@@ -8,7 +8,12 @@ import org.springframework.http.HttpStatus;
 import reactor.core.publisher.Mono;
 
 public class ReactiveCacheControlMaxAge implements IReactiveStrategy {
-
+  /**
+   * Implementación de la estragia concreta Max-age de forma Reactiva .
+   * @param cacheModel Modelo da dato
+   * @param cacheRepository Objeto para invocar a funciones del repositorio de redis
+   * @return Modelo de datos definido en {@link CacheControlStrategyResponse} .
+   */
   public CacheControlStrategyResponse cacheControlStrategy(
       CacheModel cacheModel, ICacheRepository cacheRepository)
       throws JsonProcessingException, InterruptedException {
