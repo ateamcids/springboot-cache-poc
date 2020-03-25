@@ -8,6 +8,13 @@ import org.springframework.http.HttpStatus;
 
 public class CacheControlMaxAge implements IStrategy {
 
+  /**
+   * Implementación de la estragia concreta Max-age .
+   *
+   * @param cacheModel Modelo da dato.
+   * @param cacheRepository Objeto para invocar a funciones del repositorio de redis.
+   * @return Modelo de datos definido en {@link CacheControlStrategyResponse} .
+   */
   public CacheControlStrategyResponse cacheControlStrategy(
       CacheModel cacheModel, ICacheRepository cacheRepository) {
 

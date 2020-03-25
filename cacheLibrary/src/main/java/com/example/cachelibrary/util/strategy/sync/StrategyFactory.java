@@ -13,6 +13,12 @@ public class StrategyFactory {
         initStrategies();
     }
 
+    /**
+     * Verificar si existe el cache control y devolver la estragia concreta .
+     *
+     * @param cacheControl Nombre del cache control
+     * @return interface de la estrategia
+     */
     public IStrategy getStrategy(CacheControlEnum cacheControl) {
         if (cacheControl == null || !strategies.containsKey(cacheControl)) {
             return null;
@@ -20,6 +26,7 @@ public class StrategyFactory {
         return strategies.get(cacheControl);
     }
 
+    /** Inicializar las estragias concretas . */
     private void initStrategies() {
         strategies.put(CacheControlEnum.MAXAGE, new CacheControlMaxAge());
         strategies.put(CacheControlEnum.NOSTORE, new CacheControlNoStore());
