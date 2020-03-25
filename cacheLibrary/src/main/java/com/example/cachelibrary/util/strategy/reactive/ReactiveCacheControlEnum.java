@@ -2,6 +2,10 @@ package com.example.cachelibrary.util.strategy.reactive;
 
 import java.util.regex.Pattern;
 
+/**
+ * Enum que indica todas los posibles valores que existen en el cache control para ser utilizado en
+ * la estrategia concreta .
+ */
 public enum ReactiveCacheControlEnum {
   MUSTREVALIDATE("must-revalidate"),
   NOCACHE("no-cache"),
@@ -17,16 +21,33 @@ public enum ReactiveCacheControlEnum {
   private final String cacheControlCode;
   private final Pattern maxagePattern;
 
+  /**
+   * Inicializa la variable maxagePattern para ser usada en cache control Max-age .
+   *
+   * @param cacheControlCode Nombre de cache control .
+   */
   private ReactiveCacheControlEnum(Pattern cacheControlCode) {
     this.maxagePattern = cacheControlCode;
     this.cacheControlCode = null;
   }
 
+  /**
+   * Inicializa la variable cacheControlCode para ser usada en cache control diferente a Max-age .
+   *
+   * @param cacheControlCode Nombre de cache control .
+   */
   private ReactiveCacheControlEnum(String cacheControlCode) {
     this.cacheControlCode = cacheControlCode;
     this.maxagePattern = null;
   }
 
+  /**
+   * Verifica que tipo de cache control se recibe y que se encuentre dentro de los definidos en el
+   * enum .
+   *
+   * @param cacheControlCode Nombre de cache control
+   * @return objeto de tipo {@link ReactiveCacheControlEnum} que coincida que algún enum .
+   */
   public static ReactiveCacheControlEnum getByCode(String cacheControlCode) {
     for (ReactiveCacheControlEnum e : values()) {
       if (e.cacheControlCode != null && e.cacheControlCode.equals(cacheControlCode)) {
