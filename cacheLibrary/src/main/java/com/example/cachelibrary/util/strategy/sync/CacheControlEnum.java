@@ -28,7 +28,7 @@ public enum CacheControlEnum {
    *
    * @param cacheControlCode Nombre de cache control .
    */
-  private CacheControlEnum(Pattern cacheControlCode) {
+   CacheControlEnum(Pattern cacheControlCode) {
     this.maxagePattern = cacheControlCode;
     this.cacheControlCode = null;
   }
@@ -38,7 +38,7 @@ public enum CacheControlEnum {
    *
    * @param cacheControlCode Nombre de cache control .
    */
-  private CacheControlEnum(String cacheControlCode) {
+   CacheControlEnum(String cacheControlCode) {
     this.cacheControlCode = cacheControlCode;
     this.maxagePattern = null;
   }

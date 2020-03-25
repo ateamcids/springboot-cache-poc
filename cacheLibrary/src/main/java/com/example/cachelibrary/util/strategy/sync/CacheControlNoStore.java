@@ -10,8 +10,8 @@ public class CacheControlNoStore implements IStrategy {
   /**
    * Implementación de la estragia concreta no-store .
    *
-   * @param cacheModel Modelo da dato
-   * @param cacheRepository Objeto para invocar a funciones del repositorio de redis
+   * @param cacheModel Modelo da dato.
+   * @param cacheRepository Objeto para invocar a funciones del repositorio de redis.
    * @return Modelo de datos definido en {@link CacheControlStrategyResponse} .
    */
   public CacheControlStrategyResponse cacheControlStrategy(
