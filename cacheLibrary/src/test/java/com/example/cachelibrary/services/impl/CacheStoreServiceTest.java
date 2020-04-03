@@ -14,8 +14,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -33,11 +35,6 @@ class CacheStoreServiceTest {
   void init() {
     System.out.println("BeforeEach initEach() method called");
 
-    String collection = "http://pepe";
-    String hkey = "pepe";
-    String[] array = {"a", "b"};
-    when(cacheRepository.add(collection, hkey, array)).thenReturn(true);
-
     this.store = new CacheStoreService(cacheRepository, strategyFactory, reactiveStrategyFactory);
   }
 
@@ -48,16 +45,33 @@ class CacheStoreServiceTest {
     String hkey = "pepe";
     String[] array = {"a", "b"};
 
+    when(cacheRepository.add(collection, hkey, array)).thenReturn(true);
     assertTrue(this.store.addCollection(collection, hkey, array));
   }
 
+  @DisplayName("Test addCollection params String collection, String hkey, T object, Date")
   @Test
-  void testAddCollection() {
-    when(cacheRepository.add("http://pepe", "pepe", "objeto")).thenReturn(true);
+  void AddCollectionDate() {
+    String collection = "http://pepe";
+    String hkey = "pepe";
+    String[] array = {"a", "b"};
+    Date date = new Date();
+
+    when(cacheRepository.add(collection, hkey, array, date)).thenReturn(true);
+    assertTrue(this.store.addCollection(collection, hkey, array, date));
   }
 
   @Test
-  void testAddCollection1() {}
+  void AddCollectionTimeOut() {
+    String collection = "http://pepe";
+    String hkey = "pepe";
+    String[] array = {"a", "b"};
+    int timeout = 30;
+    TimeUnit unit = TimeUnit.SECONDS;
+
+    when(cacheRepository.add(collection, hkey, array, timeout, unit)).thenReturn(true);
+    assertTrue(this.store.addCollection(collection, hkey, array, timeout, unit));
+  }
 
   @Test
   void add() {}
