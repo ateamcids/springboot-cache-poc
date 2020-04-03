@@ -78,7 +78,7 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     }
 
     public Mono<Boolean> addReactive(String collection, String hkey, T object)
-            throws JsonProcessingException {
+          {
 
         try {
             String jsonObject = OBJECT_MAPPER.writeValueAsString(object);

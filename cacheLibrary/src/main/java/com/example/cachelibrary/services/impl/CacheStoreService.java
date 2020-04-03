@@ -145,8 +145,7 @@ class CacheStoreService<T> implements ICacheStoreService<T> {
     }
   }
 
-  public Mono<Boolean> addReactiveCollection(T object, String requestUrl, HttpHeaders headers)
-      throws JsonProcessingException, InterruptedException {
+  public Mono<Boolean> addReactiveCollection(T object, String requestUrl, HttpHeaders headers) throws JsonProcessingException, InterruptedException {
 
     String hkey = headers.getETag();
     if (hkey == null) {
