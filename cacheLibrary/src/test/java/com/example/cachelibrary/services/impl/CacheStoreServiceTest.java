@@ -3,15 +3,22 @@ package com.example.cachelibrary.services.impl;
 import com.example.cachelibrary.repositories.interfaces.ICacheRepository;
 import com.example.cachelibrary.util.strategy.reactive.ReactiveStrategyFactory;
 import com.example.cachelibrary.util.strategy.sync.StrategyFactory;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 class CacheStoreServiceTest {
 
   @MockBean ICacheRepository cacheRepository;
@@ -24,7 +31,14 @@ class CacheStoreServiceTest {
 
   @BeforeEach
   void init() {
-    store = new CacheStoreService(cacheRepository, strategyFactory, reactiveStrategyFactory);
+    System.out.println("BeforeEach initEach() method called");
+
+    String collection = "http://pepe";
+    String hkey = "pepe";
+    String[] array = {"a", "b"};
+    when(cacheRepository.add(collection, hkey, array)).thenReturn(true);
+
+    this.store = new CacheStoreService(cacheRepository, strategyFactory, reactiveStrategyFactory);
   }
 
   @DisplayName("Test addCollection params String collection, String hkey, T object")
@@ -32,17 +46,14 @@ class CacheStoreServiceTest {
   void addCollection() {
     String collection = "http://pepe";
     String hkey = "pepe";
-    String[] array = {"a","b"};
+    String[] array = {"a", "b"};
 
-    when(cacheRepository.add(collection,hkey,array)).thenReturn(true);
-
-    assertEquals(true,store.addCollection(collection,hkey,array) );
+    assertTrue(this.store.addCollection(collection, hkey, array));
   }
 
   @Test
   void testAddCollection() {
-    when(cacheRepository.add("http://pepe","pepe","objeto")).thenReturn(true);
-
+    when(cacheRepository.add("http://pepe", "pepe", "objeto")).thenReturn(true);
   }
 
   @Test
