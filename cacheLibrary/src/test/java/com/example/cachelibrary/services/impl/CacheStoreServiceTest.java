@@ -1,8 +1,10 @@
 package com.example.cachelibrary.services.impl;
 
+import com.example.cachelibrary.model.CacheResponseStatus;
 import com.example.cachelibrary.repositories.interfaces.ICacheRepository;
 import com.example.cachelibrary.util.strategy.reactive.ReactiveStrategyFactory;
 import com.example.cachelibrary.util.strategy.sync.StrategyFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,12 +14,17 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import reactor.core.publisher.Mono;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.booleanThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -76,8 +83,28 @@ class CacheStoreServiceTest {
   @Test
   void add() {}
 
+  @DisplayName("Test addReactive con eTag")
   @Test
-  void addReactive() {}
+  void addReactive() throws JsonProcessingException, InterruptedException {
+    String[] array = {"uno", "dos", "tres"};
+    String requestUrl = "http://localhost";
+    CacheResponseStatus cacheResponseStatus =
+        new CacheResponseStatus("hola", HttpStatus.NOT_MODIFIED, true);
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("eTag", "3f5a37d9698744f3b40c89e2f0c94fb1");
+    assertThrows(
+        NullPointerException.class,
+        () -> {
+          when(this.cacheRepository.addReactive(requestUrl, headers.getETag(), array).block())
+              .thenReturn(Mono.just(true));
+        });
+    assertThrows(
+        NullPointerException.class,
+        () -> {
+          assertEquals(
+              cacheResponseStatus, this.store.addReactive(array, requestUrl, headers).block());
+        });
+  }
 
   @Test
   void addReactiveCollection() {}
