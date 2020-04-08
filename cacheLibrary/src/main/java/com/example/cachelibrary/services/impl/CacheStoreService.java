@@ -154,9 +154,8 @@ class CacheStoreService<T> implements ICacheStoreService<T> {
     return cacheRepository.addReactive(requestUrl, hkey, object);
   }
 
-  public Mono<Boolean> addReactiveCollection(
-      T object, String requestUrl, HttpHeaders headers, int timeOut)
-      throws JsonProcessingException, InterruptedException {
+  public Mono<Boolean> addReactiveCollection(T object, String requestUrl, HttpHeaders headers, int timeOut)
+          throws JsonProcessingException, InterruptedException {
     String hkey = headers.getETag();
     if (hkey == null) {
       hkey = requestUrl;

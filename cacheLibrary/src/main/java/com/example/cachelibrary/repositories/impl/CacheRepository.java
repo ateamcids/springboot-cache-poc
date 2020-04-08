@@ -77,8 +77,7 @@ public class CacheRepository<T> implements ICacheRepository<T> {
         }
     }
 
-    public Mono<Boolean> addReactive(String collection, String hkey, T object)
-          {
+    public Mono<Boolean> addReactive(String collection, String hkey, T object) {
 
         try {
             String jsonObject = OBJECT_MAPPER.writeValueAsString(object);
