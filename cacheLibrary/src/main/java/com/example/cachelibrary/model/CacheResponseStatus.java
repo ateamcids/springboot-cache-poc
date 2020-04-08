@@ -45,4 +45,16 @@ public class CacheResponseStatus {
   public void setCaching(boolean caching) {
     isCaching = caching;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    }
+    if (!(o instanceof CacheResponseStatus)) {
+      return false;
+    }
+    CacheResponseStatus c = (CacheResponseStatus) o;
+    return descripcion.equals(c.descripcion) && status.equals(c.status) && isCaching == c.isCaching;
+  }
 }
