@@ -141,7 +141,7 @@ class CacheStoreService<T> implements ICacheStoreService<T> {
         if (headers.getETag() != null) {
             boolean add = cacheRepository.addReactive(requestUrl, hkey, object).block();
 
-            return Mono.just(new CacheResponseStatus("Se aplicó estrategia", HttpStatus.OK, add));
+            return Mono.just(new CacheResponseStatus(CacheResStatusDescripcionEnum.APLICOESTRATEGIA.getDescripcion(), HttpStatus.OK, add));
         } else {
             return null;
         }

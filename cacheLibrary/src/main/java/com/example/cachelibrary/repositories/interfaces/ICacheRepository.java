@@ -65,7 +65,7 @@ public interface ICacheRepository<T> {
    * @param collection Nombre de la coleccion a guardar.
    * @param hkey  Llave para identificar el objeto dentro de la coleccion.
    * @param object Objeto a guardar.
-   * @param timeout Tiempo que el objeto va a durar en memoria.
+   * @param timeout Tiempo que el objeto va a durar en memoria EN SEGUNDOS.
    * @return Un mono de tipo boolean que informa si se guardo o no.
    */
   Mono<Boolean> addReactive(String collection, String hkey, T object, int timeout)
@@ -96,15 +96,15 @@ public interface ICacheRepository<T> {
    * @param hkey  Nombre de la llave que identifica el objeto.
    * @return  Boolean que informa si se elimino o no.
    */
-  boolean delete(String collection, String hkey);
+  long delete(String collection, String hkey);
 
   /**
    *  Eliminar una coleccion en forma reactiva.
    *
    * @param collection Nombre de la coleccion a eliminar.
-   * @return  Boolean que informa si se elimino o no.
+   * @return  Mono<Long> la cantidad de colecciones eliminadas.
    */
-  boolean deleteReactive(String collection);
+  Mono<Long> deleteReactive(String collection);
 
   /**
    *  Buscar un objeto determinado dentro de redis por medio de una llave y coleccion.
@@ -149,13 +149,11 @@ public interface ICacheRepository<T> {
    */
   boolean hasKey(String collection, String hkey);
 
-  Map completeCollection(String collection);
-
   /**
    *  Obtener el primer objeto dentro de la coleccion.
    *
    * @param collection  Nombre de la coleccion.
-   * @return  String con el primer dato de la coleccion.
+   * @return  String con el primer hkey de la coleccion.
    */
-  public String first(String collection);
+  String first(String collection);
 }

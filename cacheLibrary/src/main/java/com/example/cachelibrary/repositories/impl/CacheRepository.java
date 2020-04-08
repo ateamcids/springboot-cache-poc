@@ -45,6 +45,7 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     template.opsForHash().put(collection, hkey, jsonObject);
   }
 
+  @Override
   public boolean add(String collection, String hkey, T object, int timeout, TimeUnit unit) {
     try {
       addCollection(collection, hkey, object);
@@ -55,6 +56,7 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     }
   }
 
+  @Override
   public boolean add(String collection, String hkey, T object) {
 
     try {
@@ -65,6 +67,7 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     }
   }
 
+  @Override
   public boolean add(String collection, String hkey, T object, Date date) {
     try {
       addCollection(collection, hkey, object);
@@ -75,6 +78,7 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     }
   }
 
+  @Override
   public Mono<Boolean> addReactive(String collection, String hkey, T object) {
 
     try {
@@ -86,8 +90,9 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     }
   }
 
+  @Override
   public Mono<Boolean> addReactive(String collection, String hkey, T object, int timeout)
-  {
+      throws JsonProcessingException {
     try {
       String jsonObject = OBJECT_MAPPER.writeValueAsString(object);
       reactiveTemplate.opsForHash().put(collection, hkey, jsonObject).block();
@@ -97,6 +102,7 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     }
   }
 
+  @Override
   public Mono<T> findReactive(String collection, String hkey, Class<T> tclass) {
 
     return reactiveTemplate
@@ -115,34 +121,26 @@ public class CacheRepository<T> implements ICacheRepository<T> {
             });
   }
 
-  public boolean deleteReactive(String collection) {
-    try {
-      reactiveTemplate.delete(collection);
-      return true;
-    } catch (Exception e) {
-      return false;
-    }
+  @Override
+  public Mono<Long> deleteReactive(String collection) {
+    return reactiveTemplate.delete(collection);
   }
 
+  @Override
   public boolean delete(String collection) {
     try {
-      template.delete(collection);
-      return true;
+      return template.delete(collection);
     } catch (Exception e) {
       return false;
     }
   }
 
-  public boolean delete(String collection, String hkey) {
-    try {
-      template.opsForHash().delete(collection, hkey);
-      reactiveTemplate.delete(collection, hkey);
-      return true;
-    } catch (Exception e) {
-      return false;
-    }
+  @Override
+  public long delete(String collection, String hkey) {
+      return template.opsForHash().delete(collection, hkey);
   }
 
+  @Override
   public T find(String collection, String hkey, Class<T> tclass) {
     try {
       String jsonObj = String.valueOf(template.opsForHash().get(collection, hkey));
@@ -152,6 +150,7 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     }
   }
 
+  @Override
   public T find(String collection, Class<T> tclass) {
     try {
       String jsonObj = String.valueOf(template.opsForHash().entries(collection));
@@ -161,6 +160,7 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     }
   }
 
+  @Override
   public String first(String collection) {
     try {
       Map<String, Object> map = template.opsForHash().entries(collection);
@@ -170,6 +170,7 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     }
   }
 
+  @Override
   public Boolean isAvailable() {
     try {
       return template.getConnectionFactory().getConnection().ping() != null;
@@ -178,6 +179,7 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     }
   }
 
+  @Override
   public boolean any(String collection) {
     try {
       return !template.opsForHash().entries(collection).isEmpty();
@@ -186,6 +188,7 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     }
   }
 
+  @Override
   public boolean hasKey(String collection, String hkey) {
     try {
       return template.opsForHash().entries(collection).containsKey(hkey);
@@ -194,11 +197,4 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     }
   }
 
-  public Map completeCollection(String collection) {
-    try {
-      return template.opsForHash().entries(collection);
-    } catch (Exception e) {
-      return null;
-    }
-  }
 }
