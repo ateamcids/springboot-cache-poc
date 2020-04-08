@@ -3,28 +3,18 @@ package com.example.cachelibrary.services.impl;
 import com.example.cachelibrary.model.CacheModel;
 import com.example.cachelibrary.model.CacheResStatusDescripcionEnum;
 import com.example.cachelibrary.model.CacheResponseStatus;
-import com.example.cachelibrary.model.CacheResStatusDescripcionEnum;
-import com.example.cachelibrary.model.CacheResponseStatus;
 import com.example.cachelibrary.repositories.interfaces.ICacheRepository;
 import com.example.cachelibrary.util.strategy.model.CacheControlStrategyResponse;
 import com.example.cachelibrary.util.strategy.reactive.IReactiveStrategy;
-import com.example.cachelibrary.util.strategy.reactive.ReactiveCacheControlEnum;
-import com.example.cachelibrary.util.strategy.model.CacheControlStrategyResponse;
 import com.example.cachelibrary.util.strategy.reactive.ReactiveStrategyFactory;
-import com.example.cachelibrary.util.strategy.sync.CacheControlEnum;
+import com.example.cachelibrary.util.strategy.sync.IStrategy;
 import com.example.cachelibrary.util.strategy.sync.StrategyFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -35,21 +25,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.example.cachelibrary.util.strategy.reactive.ReactiveCacheControlEnum.MAXAGE;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.booleanThat;
-import static org.mockito.Mockito.doReturn;
-import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 class CacheStoreServiceTest {
 
     @MockBean
-    ICacheRepository<String[]> cacheRepository;
+    ICacheRepository cacheRepository;
 
     @MockBean
     StrategyFactory strategyFactory;
@@ -58,7 +41,11 @@ class CacheStoreServiceTest {
     IReactiveStrategy strategy;
 
     @MockBean
+    IStrategy strategySync;
+
+    @MockBean
     ReactiveStrategyFactory reactiveStrategyFactory;
+
 
     CacheStoreService store;
 
@@ -66,7 +53,7 @@ class CacheStoreServiceTest {
     void init() {
         System.out.println("BeforeEach initEach() method called");
         reactiveStrategyFactory = new ReactiveStrategyFactory();
-      strategyFactory= new StrategyFactory();
+        strategyFactory = new StrategyFactory();
         this.store = new CacheStoreService(cacheRepository, strategyFactory, reactiveStrategyFactory);
     }
 
@@ -105,9 +92,9 @@ class CacheStoreServiceTest {
         assertTrue(this.store.addCollection(collection, hkey, array, timeout, unit));
     }
 
-    @DisplayName("Test addReactive con eTag")
+    @DisplayName("Test add sin coleccion")
     @Test
-    void add() throws JsonProcessingException, InterruptedException {
+    void addCollectionNotExist() throws JsonProcessingException, InterruptedException {
         List list = new ArrayList();
         list.add("objeto 1");
         String requestUrl = "http://localhost";
@@ -118,11 +105,50 @@ class CacheStoreServiceTest {
         when(this.cacheRepository.add(requestUrl, headers.getETag(), list)).thenReturn(true);
         assertEquals(cacheResponseStatus,this.store.add(list,requestUrl,headers));
 
-        HttpHeaders headersCacheControl = new HttpHeaders();
+        /*HttpHeaders headersCacheControl = new HttpHeaders();
         headersCacheControl.add("Cache-Control", "max-age=30");
         when(this.cacheRepository.add(requestUrl, requestUrl, list)).thenReturn(true);
-        when(this.strategyFactory.getStrategy(CacheControlEnum.getByCode("max-age=30")));
+        when(this.strategyFactory.getStrategy(CacheControlEnum.getByCode("max-age=30")));*/
         //assertEquals(cacheResponseStatus,this.store.add(list,requestUrl,headersCacheControl));
+    }
+
+    @DisplayName("Test add con coleccion existente y key existente")
+    @Test
+    void addExistEtagAndCollection() throws JsonProcessingException, InterruptedException {
+        String[] array = {"uno", "dos", "tres"};
+        String requestUrl = "http://localhost";
+        CacheResponseStatus cacheResponseStatus =
+                new CacheResponseStatus(
+                        CacheResStatusDescripcionEnum.NOMODIFICACION.getDescripcion(),
+                        HttpStatus.NOT_MODIFIED,
+                        true);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("eTag", "3f5a37d9698744f3b40c89e2f0c94fb1");
+        when(this.cacheRepository.add(requestUrl, headers.getETag(), array)).thenReturn(true);
+        when(this.cacheRepository.any(requestUrl)).thenReturn(true);
+        when(this.cacheRepository.hasKey(requestUrl, headers.getETag())).thenReturn(true);
+        assertEquals(cacheResponseStatus, this.store.add(array, requestUrl, headers));
+    }
+
+
+    @DisplayName("Test add con Max-age")
+    @Test
+    void addMaxAge() throws JsonProcessingException, InterruptedException {
+
+        String[] array = {"uno", "dos", "tres"};
+        String requestUrl = "http://localhost";
+        CacheControlStrategyResponse cacheControlStrategyResponse =
+                new CacheControlStrategyResponse(true, 30, HttpStatus.OK);
+        CacheModel cacheModel = new CacheModel(array, "max-age=30", requestUrl, requestUrl);
+        CacheResponseStatus cacheResponseStatus =
+                new CacheResponseStatus(
+                        CacheResStatusDescripcionEnum.APLICOESTRATEGIA.getDescripcion(), HttpStatus.OK, true);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "max-age=30");
+
+        when(this.cacheRepository.add(requestUrl, requestUrl, array, 30,TimeUnit.SECONDS)).thenReturn(true);
+        when(this.strategySync.cacheControlStrategy(cacheModel, cacheRepository)).thenReturn(cacheControlStrategyResponse);
+        assertEquals(cacheResponseStatus, this.store.add(array, requestUrl, headers));
     }
 
     @DisplayName("Test addReactive sin colleción")
