@@ -77,7 +77,7 @@ public interface ICacheRepository<T> {
    * @param collection Nombre de la coleccion a buscar.
    * @param hkey  Llave para identificar el objeto dentro de la coleccion.
    * @param tclass  Modelo de datos de objeto a buscar.?
-   * @return  Mono<T> del objeto buscado.
+   * @return  Mono generico del objeto buscado.
    */
   Mono<T> findReactive(String collection, String hkey, Class<T> tclass);
 
