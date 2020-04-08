@@ -197,12 +197,4 @@ public class CacheRepository<T> implements ICacheRepository<T> {
     }
   }
 
-  @Override
-  public Map completeCollection(String collection) {
-    try {
-      return template.opsForHash().entries(collection);
-    } catch (Exception e) {
-      return null;
-    }
-  }
 }

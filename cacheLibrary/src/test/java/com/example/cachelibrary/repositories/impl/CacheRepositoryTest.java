@@ -1,18 +1,13 @@
 package com.example.cachelibrary.repositories.impl;
-
 import com.example.cachelibrary.configuration.RedisConfigTest;
 import com.example.cachelibrary.repositories.interfaces.ICacheRepository;
-import com.example.cachelibrary.util.strategy.reactive.ReactiveStrategyFactory;
-import com.example.cachelibrary.util.strategy.sync.StrategyFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.omg.CORBA.TIMEOUT;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -59,9 +54,9 @@ class CacheRepositoryTest {
 
     assertTrue(repository.add(collection, hkey, array));
 
-    /*String[] response = repository.find(collection, hkey, String[].class);
+    String[] response = repository.find(collection, hkey, String[].class);
 
-    assertTrue(Arrays.equals(response,array));*/
+    assertTrue(Arrays.equals(response,array));
   }
 
   @DisplayName(
@@ -73,16 +68,16 @@ class CacheRepositoryTest {
     TimeUnit timeUnit = TimeUnit.MILLISECONDS;
 
     assertTrue(repository.add(collection, hkey, array, timeout, timeUnit));
-    /*Thread.sleep(timeout);
+    Thread.sleep(timeout);
 
     String[] response = repository.find(collection, hkey, String[].class);
-    assertTrue(response == null);*/
+    assertTrue(response == null);
 
   }
 
   @DisplayName("Test add params String collection, String hkey, T object, Date date")
   @Test
-  void testAdd3() {
+  void testAdd3() throws InterruptedException {
 
     // Expira en el dia de la fecha, en 5 segundos
     Date date = new Date();
@@ -94,10 +89,10 @@ class CacheRepositoryTest {
 
     assertTrue(repository.add(collection, hkey, array, expireDate));
 
-    /*    Thread.sleep(timeout);
+    Thread.sleep(timeout);
 
     String[] response = repository.find(collection, hkey, String[].class);
-    assertTrue(response == null);*/
+    assertTrue(response == null);
   }
 
   @DisplayName("Test addReactive params String collection, String hkey, T object")
@@ -106,9 +101,9 @@ class CacheRepositoryTest {
 
     assertTrue(repository.addReactive(collection, hkey, array).block());
 
-    /*    String[] response = repository.find(collection, hkey, String[].class);
+    String[] response = repository.find(collection, hkey, String[].class);
 
-    assertTrue(Arrays.equals(response,array));*/
+    assertTrue(Arrays.equals(response,array));
 
   }
 
@@ -120,10 +115,10 @@ class CacheRepositoryTest {
 
     assertTrue(repository.addReactive(collection, hkey, array, timeout).block());
 
-    /*Thread.sleep(timeout*1000);
+    Thread.sleep(timeout*1000);
 
     String[] response = repository.find(collection, hkey, String[].class);
-    assertTrue(response == null);*/
+    assertTrue(response == null);
   }
 
   @DisplayName("Test findReactive when exists")
@@ -308,20 +303,4 @@ class CacheRepositoryTest {
     assertFalse(repository.hasKey(collection,hkey));
   }
 
-
-  @Test
-  void completeCollection() {
-    String hkey1 = "pepe1";
-    String[] array1 = {"c", "d"};
-    Map expected = new LinkedHashMap();
-    expected.put(hkey,array);
-    expected.put(hkey1,array1);
-
-    repository.add(collection, hkey, array);
-    repository.add(collection, hkey1, array1);
-
-    Map response = repository.completeCollection(collection);
-    assertTrue(expected.equals(response));
-    System.out.println(response);
-  }
 }

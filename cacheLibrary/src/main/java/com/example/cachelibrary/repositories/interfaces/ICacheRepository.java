@@ -149,8 +149,6 @@ public interface ICacheRepository<T> {
    */
   boolean hasKey(String collection, String hkey);
 
-  Map completeCollection(String collection);
-
   /**
    *  Obtener el primer objeto dentro de la coleccion.
    *
