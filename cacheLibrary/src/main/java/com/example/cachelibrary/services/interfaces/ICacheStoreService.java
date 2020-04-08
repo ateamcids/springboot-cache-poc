@@ -39,7 +39,7 @@ public interface ICacheStoreService<T> {
    * coleccion).
    *
    * @param collection Nombre de la coleccion
-   * @return String del objeto encontrado .
+   * @return String del hkey encontrado .
    */
   public String first(String collection);
 

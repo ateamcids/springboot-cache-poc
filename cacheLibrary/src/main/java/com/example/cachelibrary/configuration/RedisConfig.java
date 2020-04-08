@@ -127,7 +127,7 @@ public class RedisConfig {
    * serialización el string.
    *
    * @param redisConnectionFactory utiliza las conexiones reactivas a redis.
-   * @return
+   * @return reactiveRedisTemplate .
    */
   @Bean
   @ConditionalOnMissingBean(name = "reactiveRedisTemplate")
@@ -143,7 +143,7 @@ public class RedisConfig {
    * serialización el string.
    *
    * @param redisConnectionFactory utiliza las conexiones a redis.
-   * @return
+   * @return template
    */
   @Bean
   @ConditionalOnMissingBean(name = "redisTemplate")
