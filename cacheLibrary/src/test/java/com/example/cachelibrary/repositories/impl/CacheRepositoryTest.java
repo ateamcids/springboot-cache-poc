@@ -1,4 +1,5 @@
 package com.example.cachelibrary.repositories.impl;
+
 import com.example.cachelibrary.configuration.RedisConfigTest;
 import com.example.cachelibrary.repositories.interfaces.ICacheRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -56,13 +57,13 @@ class CacheRepositoryTest {
 
     String[] response = repository.find(collection, hkey, String[].class);
 
-    assertTrue(Arrays.equals(response,array));
+    assertTrue(Arrays.equals(response, array));
   }
 
   @DisplayName(
       "Test add params String collection, String hkey, T object, int timeout, TimeUnit unit")
   @Test
-  void testAdd2() {
+  void testAdd2() throws InterruptedException {
 
     int timeout = 5000;
     TimeUnit timeUnit = TimeUnit.MILLISECONDS;
@@ -72,7 +73,6 @@ class CacheRepositoryTest {
 
     String[] response = repository.find(collection, hkey, String[].class);
     assertTrue(response == null);
-
   }
 
   @DisplayName("Test add params String collection, String hkey, T object, Date date")
@@ -103,8 +103,7 @@ class CacheRepositoryTest {
 
     String[] response = repository.find(collection, hkey, String[].class);
 
-    assertTrue(Arrays.equals(response,array));
-
+    assertTrue(Arrays.equals(response, array));
   }
 
   @DisplayName("Test addReactive params String collection, String hkey, T object,int timeout")
@@ -115,7 +114,7 @@ class CacheRepositoryTest {
 
     assertTrue(repository.addReactive(collection, hkey, array, timeout).block());
 
-    Thread.sleep(timeout*1000);
+    Thread.sleep(timeout * 1000);
 
     String[] response = repository.find(collection, hkey, String[].class);
     assertTrue(response == null);
@@ -277,7 +276,7 @@ class CacheRepositoryTest {
   @DisplayName("Test any when collection exists")
   @Test
   void testAnyExists() {
-    repository.add(collection,hkey,array);
+    repository.add(collection, hkey, array);
     assertTrue(repository.any(collection));
   }
 
@@ -290,17 +289,16 @@ class CacheRepositoryTest {
   @DisplayName("Test hasKey when collection and key exists")
   @Test
   void testHasKeyExists() {
-    repository.add(collection,hkey,array);
-    assertTrue(repository.hasKey(collection,hkey));
+    repository.add(collection, hkey, array);
+    assertTrue(repository.hasKey(collection, hkey));
   }
 
   @DisplayName("Test hasKey when collection exists but key doesnt")
   @Test
   void testHasntKeyExists() {
-    String hkey1= "pepe1";
-    repository.add(collection,hkey1,array);
+    String hkey1 = "pepe1";
+    repository.add(collection, hkey1, array);
 
-    assertFalse(repository.hasKey(collection,hkey));
+    assertFalse(repository.hasKey(collection, hkey));
   }
-
 }

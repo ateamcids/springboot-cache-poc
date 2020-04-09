@@ -1,7 +1,6 @@
 package com.example.cachelibrary.util.strategy.sync;
 
 import com.example.cachelibrary.util.strategy.reactive.ReactiveCacheControlEnum;
-
 import java.util.regex.Pattern;
 
 /**
@@ -28,7 +27,7 @@ public enum CacheControlEnum {
    *
    * @param cacheControlCode Nombre de cache control .
    */
-   CacheControlEnum(Pattern cacheControlCode) {
+  CacheControlEnum(Pattern cacheControlCode) {
     this.maxagePattern = cacheControlCode;
     this.cacheControlCode = null;
   }
@@ -38,7 +37,7 @@ public enum CacheControlEnum {
    *
    * @param cacheControlCode Nombre de cache control .
    */
-   CacheControlEnum(String cacheControlCode) {
+  CacheControlEnum(String cacheControlCode) {
     this.cacheControlCode = cacheControlCode;
     this.maxagePattern = null;
   }
