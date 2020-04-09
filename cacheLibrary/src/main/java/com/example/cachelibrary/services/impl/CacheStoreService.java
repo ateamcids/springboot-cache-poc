@@ -7,6 +7,7 @@ import com.example.cachelibrary.repositories.interfaces.ICacheRepository;
 import com.example.cachelibrary.services.interfaces.ICacheStoreService;
 import com.example.cachelibrary.util.strategy.reactive.IReactiveStrategy;
 import com.example.cachelibrary.util.strategy.reactive.ReactiveStrategyFactory;
+import com.example.cachelibrary.util.strategy.sync.CacheControlEnum;
 import com.example.cachelibrary.util.strategy.model.CacheControlStrategyResponse;
 import com.example.cachelibrary.util.strategy.reactive.ReactiveCacheControlEnum;
 import com.example.cachelibrary.util.strategy.sync.CacheControlEnum;
