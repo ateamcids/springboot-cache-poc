@@ -99,12 +99,6 @@ class CacheStoreServiceTest {
     headers.add("eTag", "3f5a37d9698744f3b40c89e2f0c94fb1");
     when(this.cacheRepository.add(requestUrl, headers.getETag(), list)).thenReturn(true);
     assertEquals(cacheResponseStatus, this.store.add(list, requestUrl, headers));
-
-    /*HttpHeaders headersCacheControl = new HttpHeaders();
-    headersCacheControl.add("Cache-Control", "max-age=30");
-    when(this.cacheRepository.add(requestUrl, requestUrl, list)).thenReturn(true);
-    when(this.strategyFactory.getStrategy(CacheControlEnum.getByCode("max-age=30")));*/
-    // assertEquals(cacheResponseStatus,this.store.add(list,requestUrl,headersCacheControl));
   }
 
   @DisplayName("Test add con coleccion existente y key existente")
@@ -157,8 +151,6 @@ class CacheStoreServiceTest {
             CacheResStatusDescripcionEnum.APLICOESTRATEGIA.getDescripcion(), HttpStatus.OK, true);
     HttpHeaders headers = new HttpHeaders();
     headers.add("eTag", "3f5a37d9698744f3b40c89e2f0c94fb1");
-    // doReturn(Mono.just(true)).when(this.cacheRepository).addReactive(requestUrl,
-    // headers.getETag(), array);
     when(this.cacheRepository.addReactive(requestUrl, headers.getETag(), array))
         .thenReturn(Mono.just(true));
     when(this.cacheRepository.any(requestUrl)).thenReturn(false);
@@ -177,8 +169,6 @@ class CacheStoreServiceTest {
             true);
     HttpHeaders headers = new HttpHeaders();
     headers.add("eTag", "3f5a37d9698744f3b40c89e2f0c94fb1");
-    // doReturn(Mono.just(true)).when(this.cacheRepository).addReactive(requestUrl,
-    // headers.getETag(), array);
     when(this.cacheRepository.addReactive(requestUrl, headers.getETag(), array))
         .thenReturn(Mono.just(true));
     when(this.cacheRepository.any(requestUrl)).thenReturn(true);
