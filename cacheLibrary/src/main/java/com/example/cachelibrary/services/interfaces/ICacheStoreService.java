@@ -87,7 +87,8 @@ public interface ICacheStoreService<T> {
    * @param headers Encabezado de la petición
    * @return Modelo de datos definido en el objeto CacheResponseStatus .
    */
-  CacheResponseStatus add(T object, String requestUrl, HttpHeaders headers) throws JsonProcessingException, InterruptedException;
+  CacheResponseStatus add(T object, String requestUrl, HttpHeaders headers)
+      throws JsonProcessingException, InterruptedException;
 
   /**
    * Solicita información de manera Reactiva al repositorio de redis para obtener todos los datos de

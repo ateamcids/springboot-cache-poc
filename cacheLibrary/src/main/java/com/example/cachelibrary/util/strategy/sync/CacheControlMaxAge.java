@@ -2,8 +2,8 @@ package com.example.cachelibrary.util.strategy.sync;
 
 import com.example.cachelibrary.model.CacheModel;
 import com.example.cachelibrary.repositories.interfaces.ICacheRepository;
-import java.util.concurrent.TimeUnit;
 import com.example.cachelibrary.util.strategy.model.CacheControlStrategyResponse;
+import java.util.concurrent.TimeUnit;
 import org.springframework.http.HttpStatus;
 
 public class CacheControlMaxAge implements IStrategy {
