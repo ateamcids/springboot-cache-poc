@@ -57,4 +57,9 @@ public class CacheResponseStatus {
     CacheResponseStatus c = (CacheResponseStatus) o;
     return descripcion.equals(c.descripcion) && status.equals(c.status) && isCaching == c.isCaching;
   }
+
+  @Override
+  public int hashCode() {
+    return super.hashCode();
+  }
 }
