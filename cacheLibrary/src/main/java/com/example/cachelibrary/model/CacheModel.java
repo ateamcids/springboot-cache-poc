@@ -86,19 +86,4 @@ public class CacheModel<T> {
   public void setHeader(String header) {
     this.header = header;
   }
-
-  @Override
-  public boolean equals(Object o) {
-    if (o == this) {
-      return true;
-    }
-    if (!(o instanceof CacheModel)) {
-      return false;
-    }
-    CacheModel c = (CacheModel) o;
-    return object.equals(c.object)
-        && header.equals(c.header)
-        && collection.equals(c.collection)
-        && hkey.equals(c.hkey);
-  }
 }

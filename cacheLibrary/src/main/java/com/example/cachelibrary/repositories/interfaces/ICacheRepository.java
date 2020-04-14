@@ -102,7 +102,7 @@ public interface ICacheRepository<T> {
    *  Eliminar una coleccion en forma reactiva.
    *
    * @param collection Nombre de la coleccion a eliminar.
-   * @return  Mono<Long> la cantidad de colecciones eliminadas.
+   * @return  Mono de tipo long con la cantidad de colecciones eliminadas.
    */
   Mono<Long> deleteReactive(String collection);
 

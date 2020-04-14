@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -99,12 +101,6 @@ class CacheStoreServiceTest {
     headers.add("eTag", "3f5a37d9698744f3b40c89e2f0c94fb1");
     when(this.cacheRepository.add(requestUrl, headers.getETag(), list)).thenReturn(true);
     assertEquals(cacheResponseStatus, this.store.add(list, requestUrl, headers));
-
-    /*HttpHeaders headersCacheControl = new HttpHeaders();
-    headersCacheControl.add("Cache-Control", "max-age=30");
-    when(this.cacheRepository.add(requestUrl, requestUrl, list)).thenReturn(true);
-    when(this.strategyFactory.getStrategy(CacheControlEnum.getByCode("max-age=30")));*/
-    // assertEquals(cacheResponseStatus,this.store.add(list,requestUrl,headersCacheControl));
   }
 
   @DisplayName("Test add con coleccion existente y key existente")
@@ -147,7 +143,7 @@ class CacheStoreServiceTest {
     assertEquals(cacheResponseStatus, this.store.add(array, requestUrl, headers));
   }
 
-  @DisplayName("Test addReactive sin colleción")
+  @DisplayName("Test addReactive sin colección")
   @Test
   void addReactiveCollectionNotExist() throws JsonProcessingException, InterruptedException {
     String[] array = {"uno", "dos", "tres"};
@@ -157,8 +153,6 @@ class CacheStoreServiceTest {
             CacheResStatusDescripcionEnum.APLICOESTRATEGIA.getDescripcion(), HttpStatus.OK, true);
     HttpHeaders headers = new HttpHeaders();
     headers.add("eTag", "3f5a37d9698744f3b40c89e2f0c94fb1");
-    // doReturn(Mono.just(true)).when(this.cacheRepository).addReactive(requestUrl,
-    // headers.getETag(), array);
     when(this.cacheRepository.addReactive(requestUrl, headers.getETag(), array))
         .thenReturn(Mono.just(true));
     when(this.cacheRepository.any(requestUrl)).thenReturn(false);
@@ -177,8 +171,6 @@ class CacheStoreServiceTest {
             true);
     HttpHeaders headers = new HttpHeaders();
     headers.add("eTag", "3f5a37d9698744f3b40c89e2f0c94fb1");
-    // doReturn(Mono.just(true)).when(this.cacheRepository).addReactive(requestUrl,
-    // headers.getETag(), array);
     when(this.cacheRepository.addReactive(requestUrl, headers.getETag(), array))
         .thenReturn(Mono.just(true));
     when(this.cacheRepository.any(requestUrl)).thenReturn(true);
@@ -186,20 +178,24 @@ class CacheStoreServiceTest {
     assertEquals(cacheResponseStatus, this.store.addReactive(array, requestUrl, headers).block());
   }
 
-  /**
-   * @DisplayName("Test addReactive con Max-age") @Test void addReactiveMaxAge() throws
-   * JsonProcessingException, InterruptedException { String[] array = {"uno", "dos", "tres"}; String
-   * requestUrl = "http://localhost"; CacheModel cacheModel= new CacheModel(array, "max-age=30",
-   * requestUrl,requestUrl); CacheResponseStatus cacheResponseStatus = new CacheResponseStatus(
-   * CacheResStatusDescripcionEnum.APLICOESTRATEGIA.getDescripcion(), HttpStatus.OK, true);
-   * HttpHeaders headers = new HttpHeaders(); headers.add("Cache-Control", "max-age=30"); //
-   * doReturn(Mono.just(true)).when(this.cacheRepository).addReactive(requestUrl, //
-   * headers.getETag(), array); when(this.cacheRepository.addReactive(requestUrl, "max-age=30",
-   * array)) .thenReturn(Mono.just(true));
-   * when(this.strategy.cacheControlStrategy(cacheModel,this.cacheRepository)).thenReturn();
-   * when(this.reactiveStrategyFactory.getStrategy(MAXAGE)); assertEquals(cacheResponseStatus,
-   * this.store.addReactive(array, requestUrl, headers).block()); }*
-   */
+  @DisplayName("Test addReactive con coleccion existente y key INexistente")
+  @Test
+  void addReactiveDiferentEtagAndCollection() throws JsonProcessingException, InterruptedException {
+    String[] array = {"uno", "dos", "tres"};
+    String requestUrl = "http://localhost";
+    CacheResponseStatus cacheResponseStatus =
+        new CacheResponseStatus(
+            CacheResStatusDescripcionEnum.APLICOESTRATEGIA.getDescripcion(), HttpStatus.OK, true);
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("eTag", "3f5a37d9698744f3b40c89e2f0c94fb1");
+    when(this.cacheRepository.addReactive(requestUrl, headers.getETag(), array))
+        .thenReturn(Mono.just(true));
+    when(this.cacheRepository.any(requestUrl)).thenReturn(true);
+    when(this.cacheRepository.hasKey(requestUrl, headers.getETag())).thenReturn(false);
+    when(this.cacheRepository.delete(requestUrl)).thenReturn(true);
+    assertEquals(cacheResponseStatus, this.store.addReactive(array, requestUrl, headers).block());
+  }
+
   @DisplayName("Test addReactive con Max-age")
   @Test
   void addReactiveMaxAge() throws JsonProcessingException, InterruptedException {
@@ -222,18 +218,85 @@ class CacheStoreServiceTest {
     assertEquals(cacheResponseStatus, this.store.addReactive(array, requestUrl, headers).block());
   }
 
+  @DisplayName("Test addReactive con no-store")
   @Test
-  void addReactiveCollection() throws JsonProcessingException, InterruptedException {
+  void addReactiveNoStore() throws JsonProcessingException, InterruptedException {
+
     String[] array = {"uno", "dos", "tres"};
     String requestUrl = "http://localhost";
+    CacheControlStrategyResponse cacheControlStrategyResponse =
+        new CacheControlStrategyResponse(false, null, HttpStatus.OK);
     CacheResponseStatus cacheResponseStatus =
         new CacheResponseStatus(
-            CacheResStatusDescripcionEnum.APLICOESTRATEGIA.getDescripcion(), HttpStatus.OK, true);
+            CacheResStatusDescripcionEnum.APLICOESTRATEGIA.getDescripcion(), HttpStatus.OK, false);
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Cache-Control", "no-store");
+
+    when(this.cacheRepository.addReactive(requestUrl, requestUrl, array))
+        .thenReturn(Mono.just(true));
+    assertEquals(cacheResponseStatus, this.store.addReactive(array, requestUrl, headers).block());
+  }
+
+  @DisplayName("Test addReactive con eTag, SIN CacheResponseStatus")
+  @Test
+  void addReactiveCollectionWithEtag() throws JsonProcessingException, InterruptedException {
+    String[] array = {"uno", "dos", "tres"};
+    String requestUrl = "http://localhost";
     HttpHeaders headers = new HttpHeaders();
     headers.add("eTag", "3f5a37d9698744f3b40c89e2f0c94fb1");
     when(this.cacheRepository.addReactive(requestUrl, headers.getETag(), array))
         .thenReturn(Mono.just(true));
-    assertEquals(cacheResponseStatus, this.store.addReactive(array, requestUrl, headers).block());
+    assertTrue((Boolean) this.store.addReactiveCollection(array, requestUrl, headers).block());
+  }
+
+  @DisplayName("Test addReactive sin eTag, SIN CacheResponseStatus")
+  @Test
+  void addReactiveCollectionWithoutEtag() throws JsonProcessingException, InterruptedException {
+    String[] array = {"uno", "dos", "tres"};
+    String requestUrl = "http://localhost";
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("eTag", "3f5a37d9698744f3b40c89e2f0c94fb1");
+    when(this.cacheRepository.addReactive(requestUrl, requestUrl, array))
+        .thenReturn(Mono.just(true));
+    HttpHeaders headers2 = new HttpHeaders();
+    assertTrue((Boolean) this.store.addReactiveCollection(array, requestUrl, headers2).block());
+  }
+
+  @DisplayName("Test addReactive con eTag y TimeOut, SIN CacheResponseStatus")
+  @Test
+  void addReactiveCollectionWithEtagAndTimeout()
+      throws JsonProcessingException, InterruptedException {
+    String[] array = {"uno", "dos", "tres"};
+    String requestUrl = "http://localhost";
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("eTag", "3f5a37d9698744f3b40c89e2f0c94fb1");
+    when(this.cacheRepository.addReactive(requestUrl, headers.getETag(), array, 30))
+        .thenReturn(Mono.just(true));
+    assertTrue((Boolean) this.store.addReactiveCollection(array, requestUrl, headers, 30).block());
+  }
+
+  @DisplayName("Test addReactive con TimeOut y sin eTag, SIN CacheResponseStatus")
+  @Test
+  void addReactiveCollectiontTimeOutWithouEtag()
+      throws JsonProcessingException, InterruptedException {
+    String[] array = {"uno", "dos", "tres"};
+    String requestUrl = "http://localhost";
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("eTag", "3f5a37d9698744f3b40c89e2f0c94fb1");
+    when(this.cacheRepository.addReactive(requestUrl, requestUrl, array, 30))
+        .thenReturn(Mono.just(true));
+    HttpHeaders headers2 = new HttpHeaders();
+    assertTrue((Boolean) this.store.addReactiveCollection(array, requestUrl, headers2, 30).block());
+  }
+
+  @DisplayName("Test addReactive retorna null")
+  @Test
+  void addReactiveReturnNull() throws JsonProcessingException, InterruptedException {
+    String[] array = {"uno", "dos", "tres"};
+    String requestUrl = "http://localhost";
+    HttpHeaders headers = new HttpHeaders();
+    when(this.cacheRepository.any(requestUrl)).thenReturn(false);
+    assertNull(this.store.addReactive(array, requestUrl, headers));
   }
 
   @Test

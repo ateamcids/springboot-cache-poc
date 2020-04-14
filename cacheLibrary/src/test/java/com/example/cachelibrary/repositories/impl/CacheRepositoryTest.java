@@ -73,13 +73,10 @@ class CacheRepositoryTest {
     TimeUnit timeUnit = TimeUnit.MILLISECONDS;
 
     assertTrue(repository.add(collection, hkey, array, timeout, timeUnit));
-    String[] response = repository.find(collection, hkey, String[].class);
-    assertTrue(Arrays.equals(response, array));
-
     Thread.sleep(timeout);
 
-    String[] response1 = repository.find(collection, hkey, String[].class);
-    assertTrue(response1 == null);
+    String[] response = repository.find(collection, hkey, String[].class);
+    assertTrue(response == null);
   }
 
   @DisplayName("Test add params String collection, String hkey, T object, Date date")

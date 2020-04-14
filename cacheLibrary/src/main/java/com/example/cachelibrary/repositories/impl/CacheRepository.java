@@ -137,7 +137,7 @@ public class CacheRepository<T> implements ICacheRepository<T> {
 
   @Override
   public long delete(String collection, String hkey) {
-      return template.opsForHash().delete(collection, hkey);
+    return template.opsForHash().delete(collection, hkey);
   }
 
   @Override
@@ -196,5 +196,4 @@ public class CacheRepository<T> implements ICacheRepository<T> {
       return false;
     }
   }
-
 }
