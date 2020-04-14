@@ -1,6 +1,7 @@
 package com.example.cachelibrary.repositories.impl;
 
 import com.example.cachelibrary.configuration.RedisConfigTest;
+import com.example.cachelibrary.configuration.RedisEmbeddedServerConfig;
 import com.example.cachelibrary.repositories.interfaces.ICacheRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.AfterEach;
@@ -9,9 +10,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.*;
@@ -20,7 +23,9 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
-@Import(RedisConfigTest.class)
+@Import({RedisConfigTest.class, RedisEmbeddedServerConfig.class})
+@TestPropertySource(locations = {"/redis.properties"})
+
 class CacheRepositoryTest {
 
   @Autowired RedisTemplate redisTemplate;
@@ -52,7 +57,6 @@ class CacheRepositoryTest {
   @DisplayName("Test add params String collection, String hkey, T object")
   @Test
   void testAdd1() {
-
     assertTrue(repository.add(collection, hkey, array));
 
     String[] response = repository.find(collection, hkey, String[].class);
@@ -91,11 +95,13 @@ class CacheRepositoryTest {
     Date expireDate = cal.getTime();
 
     assertTrue(repository.add(collection, hkey, array, expireDate));
+    String[] response = repository.find(collection, hkey, String[].class);
+    assertTrue(Arrays.equals(response, array));
 
     Thread.sleep(timeout);
 
-    String[] response = repository.find(collection, hkey, String[].class);
-    assertTrue(response == null);
+    String[] response1 = repository.find(collection, hkey, String[].class);
+    assertTrue(response1 == null);
   }
 
   @DisplayName("Test addReactive params String collection, String hkey, T object")
